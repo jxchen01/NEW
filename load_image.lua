@@ -7,7 +7,6 @@ cmd:text()
 cmd:text('Options:')
 cmd:option('--dir', './data', 'the directory to load')
 cmd:option('--ext','.png','only load a specific type of images')
-cmd:option('--visualize', false, 'visualize input data and weights during training')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -38,9 +37,6 @@ for i,file in ipairs(files) do
    	table.insert(images, image.load(file))
 end
 
-if opt.visualize then
-   	for i = 1,math.min(#files,5) do
-   		image.display{image=images[i], legend=files[i]}
-	end
-end
+print('Loaded images:')
+print(images)
 
