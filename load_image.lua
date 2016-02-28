@@ -5,9 +5,9 @@ require 'nn'      -- provides a normalization operator
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
-cmd:option('-dir', './data', 'the directory to load')
-cmd:option('-ext','.png','only load a specific type of images')
-cmd:option('-visualize', false, 'visualize input data and weights during training')
+cmd:option('--dir', './data', 'the directory to load')
+cmd:option('--ext','.png','only load a specific type of images')
+cmd:option('--visualize', false, 'visualize input data and weights during training')
 cmd:text()
 opt = cmd:parse(arg or {})
 
