@@ -102,7 +102,7 @@ freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
 
-unet = nn.gModule({input},{L2}):cuda()
+unet = nn.gModule({input},{L1}):cuda()
 criterion = nn.CrossEntropyCriterion():cuda()
 
 local params, gradParams = unet:getParameters()
