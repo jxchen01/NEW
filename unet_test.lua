@@ -8,10 +8,10 @@ cutorch.setDevice(2)
 
 local freeMemory, totalMemory
 
-XX=30
+XX=10
 
-input_image = torch.rand(1,572,572)
-label_image = torch.Tensor(388*388,1):random(1,2)
+input_image = torch.rand(1,572,572):cuda()
+label_image = torch.Tensor(388*388,1):random(1,2):cuda()
 
 freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
@@ -98,8 +98,8 @@ freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
 
-unet = nn.gModule({input},{L10})
-criterion = nn.CrossEntropyCriterion()
+unet = nn.gModule({input},{L10}):cuda()
+criterion = nn.CrossEntropyCriterion():cuda()
 
 freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
