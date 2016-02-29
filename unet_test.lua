@@ -27,9 +27,8 @@ L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
 L1=nn.ReLU(true)(L1c)
 
 L2a=nn.SpatialMaxPooling(2, 2, 2, 2)(L1)
-
---[[
 L2b=nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0)(L2a)
+--[[
 L2c=nn.ReLU(true)(L2b)
 L2d=nn.SpatialConvolution(128, 128, 3, 3, 1, 1, 0, 0)(L2c)
 L2=nn.ReLU(true)(L2d)
@@ -102,7 +101,7 @@ freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
 
-unet = nn.gModule({input},{L2a}):cuda()
+unet = nn.gModule({input},{L2b}):cuda()
 criterion = nn.CrossEntropyCriterion():cuda()
 
 local params, gradParams = unet:getParameters()
