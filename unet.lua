@@ -62,8 +62,8 @@ L6S:add(nn.ReLU())
 L6=L6S({L5up,L4C})
 
 Crop3=nn.Sequential()
-local offset = 16
-local length = 4*XX-16
+offset = 16
+length = 4*XX-16
 Crop3:add(nn.Narrow(2,offset,length))
 Crop3:add(nn.Narrow(3,offset,legnth))
 L3C=Crop3(L3)
@@ -78,8 +78,8 @@ L7S:add(nn.ReLU())
 L7=L7S({L6up,L3C})
 
 Crop2=nn.Sequential()
-local offset = 40
-local length = 8*XX-40
+offset = 40
+length = 8*XX-40
 Crop2:add(nn.Narrow(2,offset,length))
 Crop2:add(nn.Narrow(3,offset,length))
 L2C=Crop2(L2)
@@ -94,8 +94,8 @@ L8S:add(nn.ReLU())
 L8=L8S({L7up,L2C})
 
 Crop1=nn.Sequential()
-local offset = 88
-local length = 16*XX-88
+offset = 88
+length = 16*XX-88
 Crop1:add(nn.Narrow(2,offset,length))
 Crop1:add(nn.Narrow(3,offset,length))
 L1C=Crop1(L1)
