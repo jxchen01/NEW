@@ -110,9 +110,9 @@ L10S=nn.Sequential()
 L10S:add(nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0))
 L10S:add(nn.Transpose({1,2},{2,3}))
 L10S:add(nn.Reshape(388*388,2))
+L10=L10S(L9)
 
-unet = nn.gModule({input},{L10})
-unet:cuda()
+unet = nn.gModule({input},{L10}):cuda()
 
 input_image = torch.rand(1,572,572):cuda()
 label_image = torch.Tensor(388*388,2):random(1,2):cuda()
