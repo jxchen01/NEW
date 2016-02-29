@@ -109,8 +109,8 @@ nngraph.annotateNodes()
 
 unet = nn.gModule({input},{L10})
 
-input_image = {torch.rand(1,572,572), torch.rand(1,572,572), torch.rand(1,572,572)}
-label_image = {torch.Tensor(1,388,388):random(1,2), torch.Tensor(1,388,388):random(1,2), torch.Tensor(1,388,388):random(1,2)}
+input_image = torch.rand(1,572,572)
+label_image = torch.Tensor(1,388,388):random(1,2)
 
 output_image = unet:forward(input_image)
 
