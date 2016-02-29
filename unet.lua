@@ -45,14 +45,14 @@ L5S:add(nn.ReLU())
 L5=L5S(L4)
 
 Crop4=nn.Sequential()
-Crop4:add(nn.Narrow(3,4,56))
-Crop4:add(nn.Narrow(4,4,56))
+Crop4:add(nn.Narrow(3,4,56)) -- min-batch only
+Crop4:add(nn.Narrow(4,4,56)) -- min-batch only
 L4C=Crop4(L4)
 L5up=nn.SpatialFullConvolution(1024, 512, 2, 2, 2, 2)(L5)
 
 
 L6S=nn.Sequential()
-L6S:add(nn.JoinTable(1,3))
+L6S:add(nn.JoinTable(1,3)) -- support min-batch by giving nInputDim
 L6S:add(nn.SpatialConvolution(1024,512, 3, 3, 1, 1, 0, 0))
 L6S:add(nn.ReLU())
 L6S:add(nn.SpatialConvolution(512,512, 3, 3, 1, 1, 0, 0))
@@ -66,7 +66,7 @@ L3C=Crop3(L3)
 L6up=nn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
 
 L7S=nn.Sequential()
-L7S:add(nn.JoinTable(1,3))
+L7S:add(nn.JoinTable(1,3)) -- support min-batch by giving nInputDim
 L7S:add(nn.SpatialConvolution(512,256, 3, 3, 1, 1, 0, 0))
 L7S:add(nn.ReLU())
 L7S:add(nn.SpatialConvolution(256,256, 3, 3, 1, 1, 0, 0))
@@ -80,7 +80,7 @@ L2C=Crop2(L2)
 L7up=nn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
 
 L8S=nn.Sequential()
-L8S:add(nn.JoinTable(1,3))
+L8S:add(nn.JoinTable(1,3))  -- support min-batch by giving nInputDim
 L8S:add(nn.SpatialConvolution(256,128, 3, 3, 1, 1, 0, 0))
 L8S:add(nn.ReLU())
 L8S:add(nn.SpatialConvolution(128,128, 3, 3, 1, 1, 0, 0))
@@ -94,7 +94,7 @@ L1C=Crop1(L1)
 L8up=nn.SpatialFullConvolution(128, 64, 2, 2, 2, 2)(L8)
 
 L9S=nn.Sequential()
-L9S:add(nn.JoinTable(1,3))
+L9S:add(nn.JoinTable(1,3)) -- support min-batch by giving nInputDim
 L9S:add(nn.SpatialConvolution(128,64, 3, 3, 1, 1, 0, 0))
 L9S:add(nn.ReLU())
 L9S:add(nn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0))
@@ -109,9 +109,14 @@ input_image = torch.rand(5,1,572,572)
 label_image = torch.Tensor(5,1,388,388):random(1,2)
 
 output_image = unet:forward(input_image)
+criterion = nn.CrossEntropyCriterion()
+local err = criterion:forward(output_image, label_image)
+local gradCriterion = criterion:backward(output_image, label_image)
+unet:zeroGradParameters()
+unet:backward(input_image,gradCriterion)
+unet:updateParameters(0.05)
 
-
-
+print(err)
 
 
 
