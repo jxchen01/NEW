@@ -128,7 +128,7 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
 --]]
 
 input_image = torch.rand(1,572,572)
-label_image = torch.Tensor(388*388,2):random(1,2)
+label_image = torch.Tensor(388*388,1):random(1,2)
 
 collectgarbage()
 
