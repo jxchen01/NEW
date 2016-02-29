@@ -115,7 +115,7 @@ L10=L10S(L9)
 unet = nn.gModule({input},{L10}):cuda()
 
 local finput, fgradInput
-model:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialConvolutionMM' then 
+unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialConvolutionMM' then 
                            finput = finput or m.finput
                            fgradInput = fgradInput or m.fgradInput
                            m.finput = finput
