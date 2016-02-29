@@ -62,10 +62,8 @@ L6S:add(nn.ReLU())
 L6=L6S({L5up,L4C})
 
 Crop3=nn.Sequential()
-offset = 16
-length = 4*XX-16
-Crop3:add(nn.Narrow(2,offset,length))
-Crop3:add(nn.Narrow(3,offset,legnth))
+Crop3:add(nn.Narrow(2,16,104))
+Crop3:add(nn.Narrow(3,16,104))
 L3C=Crop3(L3)
 L6up=nn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
 
@@ -78,10 +76,8 @@ L7S:add(nn.ReLU())
 L7=L7S({L6up,L3C})
 
 Crop2=nn.Sequential()
-offset = 40
-length = 8*XX-40
-Crop2:add(nn.Narrow(2,offset,length))
-Crop2:add(nn.Narrow(3,offset,length))
+Crop2:add(nn.Narrow(2,40,200))
+Crop2:add(nn.Narrow(3,40,200))
 L2C=Crop2(L2)
 L7up=nn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
 
@@ -94,10 +90,8 @@ L8S:add(nn.ReLU())
 L8=L8S({L7up,L2C})
 
 Crop1=nn.Sequential()
-offset = 88
-length = 16*XX-88
-Crop1:add(nn.Narrow(2,offset,length))
-Crop1:add(nn.Narrow(3,offset,length))
+Crop1:add(nn.Narrow(2,88,392))
+Crop1:add(nn.Narrow(3,88,392))
 L1C=Crop1(L1)
 L8up=nn.SpatialFullConvolution(128, 64, 2, 2, 2, 2)(L8)
 
