@@ -10,8 +10,16 @@ local freeMemory, totalMemory
 
 XX=30
 
-input = nn.Identity()()
+input_image = torch.rand(1,572,572)
+label_image = torch.Tensor(388*388,1):random(1,2)
 
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
+
+
+
+input = nn.Identity()()
 
 L1a=nn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0)(input)
 L1b=nn.ReLU(true)(L1a)
@@ -42,8 +50,8 @@ L5c=nn.ReLU(true)(L5b)
 L5d=nn.SpatialConvolution(1024, 1024, 3, 3, 1, 1, 0, 0)(L5c)
 L5=nn.ReLU(true)(L5d)
 
-Crop4=nn.Narrow(2,4,56)(L4)
-L4cp=nn.Narrow(3,4,56)(Crop4)
+Crop4=nn.Narrow(2,4,2*XX-4)(L4)
+L4cp=nn.Narrow(3,4,2*XX-4)(Crop4)
 L5up=nn.SpatialFullConvolution(1024, 512, 2, 2, 2, 2)(L5)
 
 L6a=nn.JoinTable(1,3)({L5up,L4cp})
@@ -90,8 +98,8 @@ freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
 
-unet = nn.gModule({input},{L10}):cuda()
-criterion = nn.CrossEntropyCriterion():cuda()
+unet = nn.gModule({input},{L10})
+criterion = nn.CrossEntropyCriterion()
 
 freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
@@ -119,12 +127,7 @@ freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
 
-input_image = torch.rand(1,572,572):cuda()
-label_image = torch.Tensor(388*388,1):random(1,2):cuda()
 
-freeMemory, totalMemory = cutorch.getMemoryUsage(2)
-print(freeMemory)
-print(totalMemory)
 
 collectgarbage()
 
