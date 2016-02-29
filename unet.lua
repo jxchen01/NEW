@@ -78,7 +78,7 @@ L2C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L2))
 L7up=nn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
 
 L8S=nn.Sequential()
-L8S:add(nn.JoinTable(1)
+L8S:add(nn.JoinTable(1))
 L8S:add(nn.SpatialConvolution(256,128, 3, 3, 1, 1, 0, 0))
 L8S:add(nn.ReLU())
 L8S:add(nn.SpatialConvolution(128,128, 3, 3, 1, 1, 0, 0))
