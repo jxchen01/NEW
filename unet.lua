@@ -128,7 +128,7 @@ label_image = torch.Tensor(388*388,2):random(1,2):cuda()
 
 collectgarbage()
 
-output_image = unet:forward(input_image):cuda()
+output_image = unet:forward(input_image)
 criterion = nn.CrossEntropyCriterion():cuda()
 
 local err = criterion:forward(output_image, label_image)
