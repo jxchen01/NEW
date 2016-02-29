@@ -1,6 +1,8 @@
 require 'nn'
 require 'nngraph'
 
+nngraph.setDebug(true)
+
 XX=30
 
 input = nn.Identity()()
@@ -100,16 +102,23 @@ L9=L9S({L8up,L1C})
 
 L10=nn.SpatialConvolution(64, 1, 1, 1, 1, 1, 1, 0, 0)(L9)
 
+nngraph.annotateNodes()
+
 unet = nn.gModule({input},{L10})
 
 input_image = torch.rand(1,572,572)
 label_image = torch.rand(1,388,388)
 
-unet:forward(input_image)
-unet:backward(input_image, label_image)
+-- pcal(function() )
+
+output_image = unet:forward(input_image)
+print(output_image)
+--unet:backward(input_image, label_image)
 
 graph.dot(unet.fg, 'Forward_Graph')
 graph.dot(unet.bg, 'Backward_Graph')
+
+
 --[[
 -- contracting path 
 for i, output_channel in ipairs(channel_down) do
