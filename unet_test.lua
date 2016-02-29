@@ -108,6 +108,7 @@ unet:add(nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0))
 unet:add(nn.ReLU(true))
 unet:add(nn.SpatialMaxPooling(2, 2, 2, 2))
 unet:add(nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0))
+unet=unet:cuda()
 
 
 criterion = nn.CrossEntropyCriterion():cuda()
