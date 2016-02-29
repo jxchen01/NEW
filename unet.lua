@@ -1,9 +1,11 @@
 require 'nn'
 require 'nngraph'
 
+--[[
 require 'cutorch'
 require 'cunn'
 cutorch.setDevice(2)
+--]]
 
 XX=30
 
@@ -112,8 +114,9 @@ L10S:add(nn.Transpose({1,2},{2,3}))
 L10S:add(nn.Reshape(388*388,2))
 L10=L10S(L9)
 
-unet = nn.gModule({input},{L10}):cuda()
+unet = nn.gModule({input},{L10}):
 
+--[[
 local finput, fgradInput
 unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialConvolutionMM' then 
                            finput = finput or m.finput
@@ -122,14 +125,15 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                            m.fgradInput = fgradInput
                         end
             end)
+--]]
 
-input_image = torch.rand(1,572,572):cuda()
-label_image = torch.Tensor(388*388,2):random(1,2):cuda()
+input_image = torch.rand(1,572,572)
+label_image = torch.Tensor(388*388,2):random(1,2)
 
 collectgarbage()
 
 output_image = unet:forward(input_image)
-criterion = nn.CrossEntropyCriterion():cuda()
+criterion = nn.CrossEntropyCriterion()
 
 local err = criterion:forward(output_image, label_image)
 local gradCriterion = criterion:backward(output_image, label_image)
