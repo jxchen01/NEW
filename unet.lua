@@ -47,10 +47,8 @@ L5S:add(nn.ReLU())
 L5=L5S(L4)
 
 Crop4=nn.Sequential()
-local offset = 4
-local length = 2*XX-4
-Crop4:add(nn.Narrow(2,offset,length))
-Crop4:add(nn.Narrow(3,offset,length))
+Crop4:add(nn.Narrow(2,4,56))
+Crop4:add(nn.Narrow(3,4,56))
 L4C=Crop4(L4)
 L5up=nn.SpatialFullConvolution(1024, 512, 2, 2, 2, 2)(L5)
 
