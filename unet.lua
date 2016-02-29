@@ -127,7 +127,7 @@ print(totalMemory)
 
 
 local finput, fgradInput
-unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialConvolutionMM' then 
+unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
                            finput = finput or m.finput
                            fgradInput = fgradInput or m.fgradInput
                            m.finput = finput
