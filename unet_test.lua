@@ -107,9 +107,10 @@ L9c=nn.ReLU(true)(L9b)
 L9d=nn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0)(L9c)
 L9=nn.ReLU(true)(L9d)
 
-L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
-L10b=nn.Transpose({1,2},{2,3})(L10a)
-L10=nn.Reshape(388*388,2)(L10b)
+L10=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
+--L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
+--L10b=nn.Transpose({1,2},{2,3})(L10a)
+--L10=nn.Reshape(388*388,2)(L10b)
 
 freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
