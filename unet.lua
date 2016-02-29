@@ -83,7 +83,7 @@ L8S:add(nn.SpatialConvolution(256,128, 3, 3, 1, 1, 0, 0))
 L8S:add(nn.ReLU())
 L8S:add(nn.SpatialConvolution(128,128, 3, 3, 1, 1, 0, 0))
 L8S:add(nn.ReLU())
-L8=L8S({L7up,L2C}))
+L8=L8S({L7up,L2C})
 
 local offset = 88
 local length = 16*XX-88
