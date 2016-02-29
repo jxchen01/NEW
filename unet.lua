@@ -114,7 +114,7 @@ L10S:add(nn.Transpose({1,2},{2,3}))
 L10S:add(nn.Reshape(388*388,2))
 L10=L10S(L9)
 
-unet = nn.gModule({input},{L10}):
+unet = nn.gModule({input},{L10})
 
 --[[
 local finput, fgradInput
