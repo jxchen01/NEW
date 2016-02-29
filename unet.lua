@@ -1,11 +1,11 @@
 require 'nn'
 require 'nngraph'
 
---[[
 require 'cutorch'
 require 'cunn'
 cutorch.setDevice(2)
---]]
+
+local freeMemory, totalMemory
 
 XX=30
 
@@ -114,9 +114,18 @@ L10S:add(nn.Transpose({1,2},{2,3}))
 L10S:add(nn.Reshape(388*388,2))
 L10=L10S(L9)
 
-unet = nn.gModule({input},{L10})
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
 
---[[
+unet = nn.gModule({input},{L10}):cuda()
+criterion = nn.CrossEntropyCriterion():cuda()
+
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
+
+
 local finput, fgradInput
 unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialConvolutionMM' then 
                            finput = finput or m.finput
@@ -125,15 +134,37 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                            m.fgradInput = fgradInput
                         end
             end)
---]]
 
-input_image = torch.rand(1,572,572)
-label_image = torch.Tensor(388*388,1):random(1,2)
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
+
 
 collectgarbage()
 
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
+
+input_image = torch.rand(1,572,572):cuda()
+label_image = torch.Tensor(388*388,1):random(1,2):cuda()
+
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
+
+collectgarbage()
+
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
+
 output_image = unet:forward(input_image)
-criterion = nn.CrossEntropyCriterion()
+
+freeMemory, totalMemory = cutorch.getMemoryUsage(2)
+print(freeMemory)
+print(totalMemory)
+
 
 local err = criterion:forward(output_image, label_image)
 local gradCriterion = criterion:backward(output_image, label_image)
