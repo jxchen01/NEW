@@ -101,6 +101,10 @@ print(totalMemory)
 unet = nn.gModule({input},{L10}):cuda()
 criterion = nn.CrossEntropyCriterion():cuda()
 
+local params, gradParams = unet:getParameters()
+print(#params)
+print(#gradParams)
+
 freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
@@ -115,10 +119,6 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                         end
             end)
 --]]
-
-freeMemory, totalMemory = cutorch.getMemoryUsage(2)
-print(freeMemory)
-print(totalMemory)
 
 
 collectgarbage()
