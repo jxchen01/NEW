@@ -46,54 +46,65 @@ L5S:add(nn.SpatialConvolution(1024, 1024, 3, 3, 1, 1, 0, 0))
 L5S:add(nn.ReLU())
 L5=L5S(L4)
 
+Crop4=nn.Sequential()
 local offset = 4
 local length = 2*XX-4
-L4C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L4))
+Crop4:add(nn.Narrow(2,offset,length))
+Crop4:add(nn.Narrow(3,offset,length))
+L4C=Crop4(L4)
 L5up=nn.SpatialFullConvolution(1024, 512, 2, 2, 2, 2)(L5)
 
 
 L6S=nn.Sequential()
-L6S:add(nn.JoinTable(1))
+L6S:add(nn.JoinTable(1,3))
 L6S:add(nn.SpatialConvolution(1024,512, 3, 3, 1, 1, 0, 0))
 L6S:add(nn.ReLU())
 L6S:add(nn.SpatialConvolution(512,512, 3, 3, 1, 1, 0, 0))
 L6S:add(nn.ReLU())
 L6=L6S({L5up,L4C})
 
+Crop3=nn.Sequential()
 local offset = 16
 local length = 4*XX-16
-L3C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L3))
+Crop3:add(nn.Narrow(2,offset,length))
+Crop3:add(nn.Narrow(3,offset,legnth))
+L3C=Crop3(L3)
 L6up=nn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
 
 L7S=nn.Sequential()
-L7S:add(nn.JoinTable(1))
+L7S:add(nn.JoinTable(1,3))
 L7S:add(nn.SpatialConvolution(512,256, 3, 3, 1, 1, 0, 0))
 L7S:add(nn.ReLU())
 L7S:add(nn.SpatialConvolution(256,256, 3, 3, 1, 1, 0, 0))
 L7S:add(nn.ReLU())
 L7=L7S({L6up,L3C})
 
-
+Crop2=nn.Sequential()
 local offset = 40
 local length = 8*XX-40
-L2C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L2))
+Crop2:add(nn.Narrow(2,offset,length))
+Crop2:add(nn.Narrow(3,offset,length))
+L2C=Crop2(L2)
 L7up=nn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
 
 L8S=nn.Sequential()
-L8S:add(nn.JoinTable(1))
+L8S:add(nn.JoinTable(1,3))
 L8S:add(nn.SpatialConvolution(256,128, 3, 3, 1, 1, 0, 0))
 L8S:add(nn.ReLU())
 L8S:add(nn.SpatialConvolution(128,128, 3, 3, 1, 1, 0, 0))
 L8S:add(nn.ReLU())
 L8=L8S({L7up,L2C})
 
+Crop1=nn.Sequential()
 local offset = 88
 local length = 16*XX-88
-L1C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L1))
+Crop1:add(nn.Narrow(2,offset,length))
+Crop1:add(nn.Narrow(3,offset,length))
+L1C=Crop1(L1)
 L8up=nn.SpatialFullConvolution(128, 64, 2, 2, 2, 2)(L8)
 
 L9S=nn.Sequential()
-L9S:add(nn.JoinTable(1))
+L9S:add(nn.JoinTable(1,3))
 L9S:add(nn.SpatialConvolution(128,64, 3, 3, 1, 1, 0, 0))
 L9S:add(nn.ReLU())
 L9S:add(nn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0))
@@ -109,7 +120,7 @@ unet = nn.gModule({input},{L10})
 input_image = torch.rand(1,572,572)
 label_image = torch.rand(1,388,388)
 
--- pcal(function() )
+
 
 output_image = unet:forward(input_image)
 unet:backward(input_image, label_image)
