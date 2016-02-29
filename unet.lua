@@ -41,7 +41,7 @@ L5:add(nn.ReLU())
 
 local offset = 4
 local length = 2*XX-4
-L4C=nn.Narrow(1,offset,length)(nn.Narrow(2,offset,length)(L4)))
+L4C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L4)))
 L5up=nn.SpatialFullConvolution(1024, 512, 2, 2, 2, 2)(L5)
 
 
@@ -54,7 +54,7 @@ L6:add(nn.ReLU())
 
 local offset = 16
 local length = 4*XX-16
-L3C=nn.Narrow(1,offset,length)(nn.Narrow(2,offset,length)(L3)))
+L3C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L3)))
 L6up=nn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
 
 L7=nn.Sequential()
@@ -67,7 +67,7 @@ L7:add(nn.ReLU())
 
 local offset = 40
 local length = 8*XX-40
-L2C=nn.Narrow(1,offset,length)(nn.Narrow(2,offset,length)(L2)))
+L2C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L2)))
 L7up=nn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
 
 L8=nn.Sequential()
@@ -79,7 +79,7 @@ L8:add(nn.ReLU())
 
 local offset = 88
 local length = 16*XX-88
-L1C=nn.Narrow(1,offset,length)(nn.Narrow(2,offset,length)(L1)))
+L1C=nn.Narrow(3,offset,length)(nn.Narrow(2,offset,length)(L1)))
 L8up=nn.SpatialFullConvolution(128, 64, 2, 2, 2, 2)(L8)
 
 L9=nn.Sequential()
@@ -89,7 +89,19 @@ L9:add(nn.ReLU())
 L9:add(nn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0))
 L9:add(nn.ReLU())
 
-unet = nn.gModule({input},{L9})
+L10=nn.Sequential()
+L10:add(nn.SpatialConvolution(64, 1, 1, 1, 1, 1, 1, 0, 0)(L9))
+
+unet = nn.gModule({input},{L10})
+
+input_image = torch.rand(1,572,572)
+label_image = torch.rand(388,388)
+
+unet:forward(input_image)
+unet:backward(input_image, label_image)
+
+graph.dot(unet.fg, 'Forward_Graph')
+graph.dot(unet.bg, 'Backward_Graph')
 --[[
 -- contracting path 
 for i, output_channel in ipairs(channel_down) do

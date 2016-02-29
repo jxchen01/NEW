@@ -30,13 +30,12 @@ print('Found files:')
 print(files)
 
 -- 2. Load all the files in the list
-
+-- "images" is a table of tensors of size 1 x L x L 
 images = {}
 for i,file in ipairs(files) do
    	-- load each image
    	table.insert(images, image.load(file))
 end
 
-print('Loaded images:')
-print(images)
+
 
