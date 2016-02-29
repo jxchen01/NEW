@@ -60,8 +60,8 @@ L6c=nn.ReLU(true)(L6b)
 L6d=nn.SpatialConvolution(512,512, 3, 3, 1, 1, 0, 0)(L6c)
 L6=nn.ReLU(true)(L6d)
 
-Crop3=nn.Narrow(2,16,104)(L3)
-L3cp=nn.Narrow(3,16,104)(Crop3)
+Crop3=nn.Narrow(2,16,4*XX-16)(L3)
+L3cp=nn.Narrow(3,16,4*XX-16)(Crop3)
 L6up=nn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
 
 L7a=nn.JoinTable(1,3)({L6up,L3cp})
@@ -70,8 +70,8 @@ L7c=nn.ReLU(true)(L7b)
 L7d=nn.SpatialConvolution(256,256, 3, 3, 1, 1, 0, 0)(L7c)
 L7=nn.ReLU(true)(L7d)
 
-Crop2=nn.Narrow(2,40,200)(L2)
-L2cp=nn.Narrow(3,40,200)(Crop2)
+Crop2=nn.Narrow(2,40,8*XX-40)(L2)
+L2cp=nn.Narrow(3,40,8*XX-40)(Crop2)
 L7up=nn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
 
 L8a=nn.JoinTable(1,3)({L7up,L2cp})
@@ -80,8 +80,8 @@ L8c=nn.ReLU(true)(L8b)
 L8d=nn.SpatialConvolution(128,128, 3, 3, 1, 1, 0, 0)(L8c)
 L8=nn.ReLU(true)(L8d)
 
-Crop1=nn.Narrow(2,88,392)(L1)
-L1cp=nn.Narrow(3,88,392)(Crop1)
+Crop1=nn.Narrow(2,88,16*XX-88)(L1)
+L1cp=nn.Narrow(3,88,16*XX-88)(Crop1)
 L8up=nn.SpatialFullConvolution(128, 64, 2, 2, 2, 2)(L8)
 
 L9a=nn.JoinTable(1,3)({L8up,L1cp})
