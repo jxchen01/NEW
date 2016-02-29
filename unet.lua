@@ -103,22 +103,20 @@ L9S:add(nn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0))
 L9S:add(nn.ReLU())
 L9=L9S({L8up,L1C})
 
-L10=nn.SpatialConvolution(64, 1, 1, 1, 1, 1, 0, 0)(L9)
+L10=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 
 nngraph.annotateNodes()
 
 unet = nn.gModule({input},{L10})
 
-input_image = torch.rand(1,572,572)
-label_image = torch.rand(1,388,388)
-
-
+input_image = {torch.rand(1,572,572), torch.rand(1,572,572), torch.rand(1,572,572)}
+label_image = {torch.Tensor(1,388,388):random(1,2), torch.Tensor(1,388,388):random(1,2), torch.Tensor(1,388,388):random(1,2)}
 
 output_image = unet:forward(input_image)
-unet:backward(input_image, label_image)
 
-graph.dot(unet.fg, 'Forward_Graph')
-graph.dot(unet.bg, 'Backward_Graph')
+
+
+
 
 
 --[[
