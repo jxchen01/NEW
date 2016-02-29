@@ -103,7 +103,7 @@ L10=nn.SpatialConvolution(64, 1, 1, 1, 1, 1, 1, 0, 0)(L9)
 unet = nn.gModule({input},{L10})
 
 input_image = torch.rand(1,572,572)
-label_image = torch.rand(388,388)
+label_image = torch.rand(1,388,388)
 
 unet:forward(input_image)
 unet:backward(input_image, label_image)
