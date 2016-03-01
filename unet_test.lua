@@ -8,7 +8,7 @@ cutorch.setDevice(2)
 
 local freeMemory, totalMemory
 
-XX=20
+XX=10
 
 input_image = torch.rand(1,16*XX+92,16*XX+92):cuda()
 label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):cuda()
