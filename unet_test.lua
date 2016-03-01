@@ -8,16 +8,14 @@ cutorch.setDevice(2)
 
 local freeMemory, totalMemory
 
-XX=4
+XX=8
 
-input_image = torch.rand(1,572,572):cuda()
-label_image = torch.Tensor(388*388,1):random(1,2):cuda()
+input_image = torch.rand(1,16*XX+92,16*XX+92):cuda()
+label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):cuda()
 
 freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
-
---[[
 
 input = nn.Identity()()
 
@@ -94,12 +92,12 @@ L9=nn.ReLU(true)(L9d)
 
 L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 L10b=nn.Transpose({1,2},{2,3})(L10a)
-L10=nn.Reshape(388*388,2)(L10b)
---]]
+L10=nn.Reshape((16*XX-92)*(16*XX-92),2)(L10b)
 
 
---unet = nn.gModule({input},{L2b}):cuda()
+unet = nn.gModule({input},{L10}):cuda()
 
+--[[
 unet=nn.Sequential()
 
 unet:add(nn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0))
@@ -109,7 +107,7 @@ unet:add(nn.ReLU(true))
 unet:add(nn.SpatialMaxPooling(2, 2, 2, 2))
 unet:add(nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0))
 unet=unet:cuda()
-
+--]]
 
 criterion = nn.CrossEntropyCriterion():cuda()
 
@@ -131,14 +129,6 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                         end
             end)
 --]]
-
-
-collectgarbage()
-
-freeMemory, totalMemory = cutorch.getMemoryUsage(2)
-print(freeMemory)
-print(totalMemory)
-
 
 
 collectgarbage()
