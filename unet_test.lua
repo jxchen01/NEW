@@ -8,7 +8,7 @@ cutorch.setDevice(2)
 
 local freeMemory, totalMemory
 
-XX=8
+XX=20
 
 input_image = torch.rand(1,16*XX+92,16*XX+92):cuda()
 label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):cuda()
@@ -139,8 +139,6 @@ print(totalMemory)
 
 output_image = unet:forward(input_image)
 
---[[
-
 freeMemory, totalMemory = cutorch.getMemoryUsage(2)
 print(freeMemory)
 print(totalMemory)
@@ -153,5 +151,5 @@ unet:backward(input_image,gradCriterion)
 unet:updateParameters(0.05)
 
 print(err)
---]]
+
 
