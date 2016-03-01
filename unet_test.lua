@@ -5,17 +5,33 @@ require 'cutorch'
 require 'cunn'
 cutorch.setDevice(2)
 
+--[[
+-- 1. Get the list of files in the given directory
 
-local freeMemory, totalMemory
+files = {}
 
-XX=10
+for file in paths.files(opt.dir) do
+   	if file:find(opt.ext .. '$') then
+      table.insert(files, paths.concat(opt.dir,file))
+   	end
+end
+
+if #files == 0 then
+	error('given directory doesnt contain any files of type: ' .. opt.ext)
+end
+
+table.sort(files, function (a,b) return a < b end)
+
+print('Found files:')
+print(files)
+--]]
+
+-- 2. Define the model 
+
+XX=12
 
 input_image = torch.rand(1,16*XX+92,16*XX+92):cuda()
 label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):cuda()
-
-freeMemory, totalMemory = cutorch.getMemoryUsage(2)
-print(freeMemory)
-print(totalMemory)
 
 input = nn.Identity()()
 
@@ -59,7 +75,6 @@ L6c=nn.ReLU(true)(L6b)
 L6d=nn.SpatialConvolution(512,512, 3, 3, 1, 1, 0, 0)(L6c)
 L6=nn.ReLU(true)(L6d)
 
-
 Crop3=nn.Narrow(2,16,4*XX-16)(L3)
 L3cp=nn.Narrow(3,16,4*XX-16)(Crop3)
 L6up=nn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
@@ -94,32 +109,9 @@ L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 L10b=nn.Transpose({1,2},{2,3})(L10a)
 L10=nn.Reshape((16*XX-92)*(16*XX-92),2)(L10b)
 
-
 unet = nn.gModule({input},{L10}):cuda()
 
---[[
-unet=nn.Sequential()
 
-unet:add(nn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0))
-unet:add(nn.ReLU())
-unet:add(nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0))
-unet:add(nn.ReLU(true))
-unet:add(nn.SpatialMaxPooling(2, 2, 2, 2))
-unet:add(nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0))
-unet=unet:cuda()
---]]
-
-criterion = nn.CrossEntropyCriterion():cuda()
-
-local params, gradParams = unet:getParameters()
-print(#params)
-print(#gradParams)
-
-freeMemory, totalMemory = cutorch.getMemoryUsage(2)
-print(freeMemory)
-print(totalMemory)
-
---[[
 local finput, fgradInput
 unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
                            finput = finput or m.finput
@@ -128,20 +120,19 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                            m.fgradInput = fgradInput
                         end
             end)
---]]
 
+
+criterion = nn.CrossEntropyCriterion():cuda()
 
 collectgarbage()
 
-freeMemory, totalMemory = cutorch.getMemoryUsage(2)
-print(freeMemory)
-print(totalMemory)
+--[[
+local params, gradParams = unet:getParameters()
+print(#params)
+print(#gradParams)
+--]]
 
 output_image = unet:forward(input_image)
-
-freeMemory, totalMemory = cutorch.getMemoryUsage(2)
-print(freeMemory)
-print(totalMemory)
 
 
 local err = criterion:forward(output_image, label_image)
