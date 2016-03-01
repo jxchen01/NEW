@@ -3,7 +3,14 @@ require 'nngraph'
 
 require 'cutorch'
 require 'cunn'
+
+require 'cudnn'
+cudnn.benchmark = true
+cudnn.fastest = true
+
+
 cutorch.setDevice(2)
+
 
 --[[
 -- 1. Get the list of files in the given directory
@@ -30,8 +37,10 @@ print(files)
 
 XX=14
 
-input_image = torch.rand(1,16*XX+92,16*XX+92):cuda()
-label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):cuda()
+input_image = torch.rand(1,16*XX+92,16*XX+92)
+--label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2)
+label_image = torch.Tensor(1,16*XX+92,16*XX+92):random(1,2)
+
 
 input = nn.Identity()()
 
@@ -105,12 +114,14 @@ L9c=nn.ReLU(true)(L9b)
 L9d=nn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0)(L9c)
 L9=nn.ReLU(true)(L9d)
 
+L10=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
+
+--[[
 L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 L10b=nn.Transpose({1,2},{2,3})(L10a)
 L10=nn.Reshape((16*XX-92)*(16*XX-92),2)(L10b)
 
 unet = nn.gModule({input},{L10}):cuda()
-
 
 local finput, fgradInput
 unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
@@ -125,12 +136,17 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
 criterion = nn.CrossEntropyCriterion():cuda()
 
 collectgarbage()
+--]]
 
 --[[
 local params, gradParams = unet:getParameters()
 print(#params)
 print(#gradParams)
 --]]
+
+cudnn.convert(unet, cudnn)
+
+criterion = cudnn.SpatialCrossEntropyCriterion()
 
 output_image = unet:forward(input_image)
 
