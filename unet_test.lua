@@ -28,7 +28,7 @@ print(files)
 
 -- 2. Define the model 
 
-XX=15
+XX=14
 
 input_image = torch.rand(1,16*XX+92,16*XX+92):cuda()
 label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):cuda()
