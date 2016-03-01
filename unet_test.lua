@@ -44,10 +44,10 @@ label_image = torch.Tensor(1,16*XX+92,16*XX+92):random(1,2):cuda()
 
 input = nn.Identity()()
 
-L1a=cudnn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0)(input)
-L1b=cudnn.ReLU()(L1a)
-L1c=cudnn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
-L1=cudnn.ReLU()(L1c)
+L1a=nn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0)(input)
+L1b=nn.ReLU()(L1a)
+L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
+L1=nn.ReLU()(L1c)
 
 L2a=nn.SpatialMaxPooling(2, 2, 2, 2)(L1)
 L2b=nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0)(L2a)
@@ -144,7 +144,8 @@ print(#params)
 print(#gradParams)
 --]]
 
-unet = nn.gModule({input},{L10}):cuda()
+--unet = nn.gModule({input},{L10}):cuda()
+cudnn.convert(unet,cudnn)
 criterion = cudnn.SpatialCrossEntropyCriterion():cuda()
 
 output_image = unet:forward(input_image)
