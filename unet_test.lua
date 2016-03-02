@@ -39,7 +39,7 @@ XX=14
 
 input_image = torch.rand(1,16*XX+92,16*XX+92):cuda()
 --label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2)
-label_image = torch.Tensor(1,16*XX+92,16*XX+92):random(1,2):cuda()
+label_image = torch.Tensor(64,16*XX+92,16*XX+92):random(1,2):cuda()
 
 
 input = nn.Identity()()
@@ -49,6 +49,7 @@ L1b=nn.ReLU()(L1a)
 L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
 L1=nn.ReLU()(L1c)
 
+--[[
 L2a=nn.SpatialMaxPooling(2, 2, 2, 2)(L1)
 L2b=nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0)(L2a)
 
@@ -116,6 +117,8 @@ L9=nn.ReLU(true)(L9d)
 
 L10=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 
+--]]
+
 --[[
 L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 L10b=nn.Transpose({1,2},{2,3})(L10a)
@@ -145,7 +148,8 @@ print(#gradParams)
 --]]
 
 --unet = nn.gModule({input},{L10}):cuda()
-cudnn.convert(unet,cudnn)
+unet = nn.gModule({input},{L1}):cuda()
+cudnn.convert(unet,cudnn):cuda()
 criterion = cudnn.SpatialCrossEntropyCriterion():cuda()
 
 output_image = unet:forward(input_image)
