@@ -39,7 +39,7 @@ XX=14
 
 input_image = torch.rand(2,1,16*XX+92,16*XX+92):cuda()
 --label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2)
-label_image = torch.Tensor(2,1,16*XX+92,16*XX+92):random(1,2):cuda()
+label_image = torch.Tensor(2,16*XX+92,16*XX+92):random(1,2):cuda()
 
 
 input = nn.Identity()()
