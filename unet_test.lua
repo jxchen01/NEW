@@ -44,9 +44,9 @@ label_image = torch.Tensor(2,16*XX+88,16*XX+88):random(1,2):cuda()
 
 input = nn.Identity()()
 
-L1a=cudnn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0)(input)
-L1b=cudnn.ReLU()(L1a)
-L1=cudnn.SpatialConvolution(64, 2, 3, 3, 1, 1, 0, 0)(L1b)
+L1a=nn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0)(input)
+L1b=nn.ReLU()(L1a)
+L1=nn.SpatialConvolution(64, 2, 3, 3, 1, 1, 0, 0)(L1b)
 --L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
 --L1=nn.ReLU()(L1c)
 
