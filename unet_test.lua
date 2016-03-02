@@ -46,9 +46,9 @@ input = nn.Identity()()
 
 L1a=nn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0)(input)
 L1b=nn.ReLU()(L1a)
-L1c=nn.SpatialConvolution(64, 1, 3, 3, 1, 1, 0, 0)(L1b)
+L1=nn.SpatialConvolution(64, 2, 3, 3, 1, 1, 0, 0)(L1b)
 --L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
-L1=nn.ReLU()(L1c)
+--L1=nn.ReLU()(L1c)
 
 --[[
 L2a=nn.SpatialMaxPooling(2, 2, 2, 2)(L1)
