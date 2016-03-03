@@ -272,7 +272,7 @@ end
 
 parameters,gradParameters = unet:getParameters()
 
---[[]
+
 config = {learningRate=opt.learningRate,
           momentum=opt.momentum}
 
@@ -314,10 +314,9 @@ for iter=1, opt.epoch do
    collectgarbage()
 end
 
---]]
 
 -- Traininig by Manual Loop 
-
+--[[
 lr = opt.learningRate
 for k=1, opt.epoch do
    image_index = torch.randperm(#images):long()
@@ -345,6 +344,6 @@ for k=1, opt.epoch do
       torch.save(filename,unet);
    end
 end
-
+--]]
 
 
