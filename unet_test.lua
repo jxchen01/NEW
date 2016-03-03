@@ -300,7 +300,7 @@ function train()
 
          unet:backward(input_image,grad_df)
 
-         return err gradParameters
+         return err, gradParameters
       end
 
       optim.sgd(feval, parameters, config)
@@ -311,6 +311,7 @@ end
 
 for iter=1, opt.epoch do
    train()
+   collectgarbage()
 end
 
 -- Traininig by Manual Loop 
