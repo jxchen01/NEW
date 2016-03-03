@@ -245,9 +245,9 @@ end
 parameters,gradParameters = unet:getParameters()
 
 
-config = {learningRate=opt.learningRate,
-          momentum=opt.momentum}
-
+--config = {learningRate=opt.learningRate,
+--          momentum=opt.momentum}
+config={learningRate=opt.learningRate, alpha=0.95}
 
 function train()
    unet:training()
@@ -283,7 +283,8 @@ function train()
          return err, gradParameters
       end
 
-      tmp , f = optim.sgd(feval, parameters, config)
+      optim.rmsprop(feval, parameters, config)
+      --optim.sgd(feval, parameters, config)
    end
 
    epoch = epoch + 1
