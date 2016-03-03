@@ -244,10 +244,11 @@ end
 
 parameters,gradParameters = unet:getParameters()
 
+--[[
 
---config = {learningRate=opt.learningRate,
---          momentum=opt.momentum}
-config={learningRate=opt.learningRate, alpha=0.95}
+config = {learningRate=opt.learningRate,
+          momentum=opt.momentum}
+--config={learningRate=opt.learningRate, alpha=0.95}
 
 function train()
    unet:training()
@@ -283,8 +284,8 @@ function train()
          return err, gradParameters
       end
 
-      optim.rmsprop(feval, parameters, config)
-      --optim.sgd(feval, parameters, config)
+      --optim.rmsprop(feval, parameters, config)
+      optim.sgd(feval, parameters, config)
    end
 
    epoch = epoch + 1
@@ -295,9 +296,11 @@ for iter=1, opt.epoch do
    collectgarbage()
 end
 
+--]]
+
 
 -- Traininig by Manual Loop 
---[[
+
 lr = opt.learningRate
 for k=1, opt.epoch do
    image_index = torch.randperm(#images):long()
@@ -325,6 +328,6 @@ for k=1, opt.epoch do
       torch.save(filename,unet);
    end
 end
---]]
+
 
 
