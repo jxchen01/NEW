@@ -284,7 +284,7 @@ function train()
    -- xxxxx
    -- xxxxx
 
-   image_index = torch.randperm(#images):split(1)
+   image_index = torch.randperm(#images):long():split(1)
    print(image_index)
    for i =1,#images do
 
