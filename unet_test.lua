@@ -288,7 +288,7 @@ function train()
 
       print('xx')
       print(idx)
-      print(image[1].size(3))
+      print(images[1].size(3))
       print(images[idx].size(3))
       local input_image=images[idx]:cuda()
       local label_image=labels[idx]:cuda()
