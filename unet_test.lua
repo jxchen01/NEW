@@ -288,8 +288,10 @@ function train()
 
       print('xx')
       print(idx)
-      local input_image=images:index(1,idx):cuda()
-      local label_image=labels:index(1,idx):cuda()
+      print(image[1].size(3))
+      print(images[idx].size(3))
+      local input_image=images[idx]:cuda()
+      local label_image=labels[idx]:cuda()
       
       local feval = function (x)
          if x ~= parameters then parameters:copy(x) end
