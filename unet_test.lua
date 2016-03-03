@@ -316,6 +316,8 @@ for k=1, opt.epoch do
       unet:backward(input_image,gradCriterion)
       unet:updateParameters(lr)
 
+      print(label_image:float())
+
       print('Iter: '..k..' ('..i..'), Loss= '..err)
 
       if i%5==0 then
