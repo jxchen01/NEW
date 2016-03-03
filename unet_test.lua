@@ -256,13 +256,13 @@ function train()
    image_index = torch.randperm(#images):long()
    for i =1,#images do
       
-      local idx = image_index[i]
-      local input_image=images[idx]:cuda()
-      local label_image=labels[idx]:cuda()
-      
       local feval = function (x)
          if x ~= parameters then parameters:copy(x) end
          gradParameters:zero()
+
+         local idx = image_index[i]
+         local input_image=images[idx]:cuda()
+         local label_image=labels[idx]:cuda()
 
          local output_image = unet:forward(input_image)
          local err = criterion:forward(output_image, label_image)
@@ -275,7 +275,7 @@ function train()
          if opt.clip>0 then
             gradParameters:clamp(-opt.clip, opt.clip)
          end
-         
+
          return err, gradParameters
       end
 
