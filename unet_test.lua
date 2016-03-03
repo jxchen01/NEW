@@ -14,7 +14,7 @@ cmd:text('Options:')
 cmd:option('--imageDir', '/home/jchen16/NEW/data/train/', 'the directory to load')
 cmd:option('--labelDir', '/home/jchen16/NEW/data/label/', 'the directory to load')
 cmd:option('--ext','.png','only load a specific type of images')
-cmd:option('--epoch',5000,'the number of iterations trained on the whole dataset')
+cmd:option('--epoch',40000,'the number of iterations trained on the whole dataset')
 cmd:option('--learningRate',0.001,'initial learning rate')
 cmd:option('--dropoutProb', 0.5, 'probability of zeroing a neuron (dropout probability)')
 cmd:option('--uniform', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
@@ -271,8 +271,6 @@ function train()
          local output_image = unet:forward(input_image)
          local err = criterion:forward(output_image, label_image)
          local grad_df = criterion:backward(output_image, label_image)
-
-         print(output_image)
 
          print('Epoch '..epoch..' ('..i..'): Err='..err)
 
