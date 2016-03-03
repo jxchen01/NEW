@@ -279,7 +279,7 @@ function train()
          return err, gradParameters
       end
 
-      ~ , {f} = optim.sgd(feval, parameters, config)
+      tmp , {f} = optim.sgd(feval, parameters, config)
       print(f)
    end
 
