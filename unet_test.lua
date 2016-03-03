@@ -288,6 +288,7 @@ function train()
    print(image_index)
    for i =1,#images do
 
+      print(image_index[i])
       local input_image=images[image_index[i]]:cuda()
       local label_image=labels[image_index[i]]:cuda()
       
