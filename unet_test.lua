@@ -70,11 +70,12 @@ for i,file in ipairs(files) do
    table.insert(images, image.load(file))
 end
 
-loader = nn.Reshape((16*XX-92)*(16*XX-92),1)
+--loader = nn.Reshape((16*XX-92)*(16*XX-92),1)
 
 labels = {}
 for i, file in ipairs(files_lab) do 
-   table.insert(labels, loader:forward(image.load(file)) )
+   table.insert(labels, torch.reshape(image.load(file,1,'byte'),(16*XX-92)*(16*XX-92),1))
+   --table.insert(labels, loader:forward(image.load(file,1,'byte')) )
 end
 
 -- random data for test 
@@ -244,7 +245,6 @@ end
 
 parameters,gradParameters = unet:getParameters()
 
---[[
 
 config = {learningRate=opt.learningRate,
           momentum=opt.momentum}
@@ -296,11 +296,11 @@ for iter=1, opt.epoch do
    collectgarbage()
 end
 
---]]
+
 
 
 -- Traininig by Manual Loop 
-
+--[[
 lr = opt.learningRate
 for k=1, opt.epoch do
    image_index = torch.randperm(#images):long()
@@ -330,6 +330,6 @@ for k=1, opt.epoch do
       torch.save(filename,unet);
    end
 end
-
+--]]
 
 
