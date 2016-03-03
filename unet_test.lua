@@ -15,13 +15,13 @@ cmd:option('--imageDir', '/home/jchen16/NEW/data/train/', 'the directory to load
 cmd:option('--labelDir', '/home/jchen16/NEW/data/label/', 'the directory to load')
 cmd:option('--ext','.png','only load a specific type of images')
 cmd:option('--epoch',5000,'the number of iterations trained on the whole dataset')
-cmd:option('--learningRate',0.0001,'initial learning rate')
+cmd:option('--learningRate',0.001,'initial learning rate')
 cmd:option('--dropoutProb', 0.5, 'probability of zeroing a neuron (dropout probability)')
 cmd:option('--uniform', 0.1, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', './checkpoint','directory to save network files')
 cmd:option('--checkpoint',false,'save checkpoints')
 cmd:option('--momentum',0.99,'momentum for training')
-cmd:option('--clip',2,'max allowed norm ')
+cmd:option('--clip',5,'max allowed norm ')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -252,6 +252,10 @@ config = {learningRate=opt.learningRate,
 function train()
    unet:training()
    epoch = epoch or 1
+
+   if epoch%5000==0 then
+      config.learningRate = config.learningRate * 0.5
+   end 
 
    image_index = torch.randperm(#images):long()
    for i =1,#images do
