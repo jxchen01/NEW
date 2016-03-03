@@ -283,8 +283,11 @@ function train()
    -- xxxxx
 
    image_index = torch.randperm(#images):split(1)
+   print(image_index)
    for i, idx in ipairs(image_index) do
 
+      print('xx')
+      print(idx)
       local input_image=images[idx]:cuda()
       local label_image=labels[idx]:cuda()
       
