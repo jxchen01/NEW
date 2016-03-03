@@ -1,6 +1,6 @@
 require 'nn'
 require 'nngraph'
-
+require 'optim'
 require 'cutorch'
 require 'cunn'
 
@@ -287,7 +287,6 @@ function train()
    image_index = torch.randperm(#images):long()
    for i =1,#images do
 
-      print(image_index[i])
       local input_image=images[image_index[i]]:cuda()
       local label_image=labels[image_index[i]]:cuda()
       
