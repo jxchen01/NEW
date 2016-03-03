@@ -78,11 +78,13 @@ for i, file in ipairs(files_lab) do
 end
 
 --]]
-images={torch.rand(2,1,16*XX+92,16*XX+92),torch.rand(2,1,16*XX+92,16*XX+92),torch.rand(2,1,16*XX+92,16*XX+92)}
-labels={torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2), 
-         torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2), 
-         torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2)}
+images={}
+labels={}
 
+for kk=1,5 do
+   table.insert(images,torch.rand(2,1,16*XX+92,16*XX+92))
+   table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2))
+end
 
 -- 3. Define the model 
 --[[
