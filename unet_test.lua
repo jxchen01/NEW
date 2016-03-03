@@ -15,12 +15,13 @@ cmd:option('--imageDir', '/home/jchen16/NEW/data/train/', 'the directory to load
 cmd:option('--labelDir', '/home/jchen16/NEW/data/label/', 'the directory to load')
 cmd:option('--ext','.png','only load a specific type of images')
 cmd:option('--epoch',5000,'the number of iterations trained on the whole dataset')
-cmd:option('--learningRate',0.001,'initial learning rate')
-cmd:option('--dropoutProb', -1, 'probability of zeroing a neuron (dropout probability)')
+cmd:option('--learningRate',0.0001,'initial learning rate')
+cmd:option('--dropoutProb', 0.1, 'probability of zeroing a neuron (dropout probability)')
 cmd:option('--uniform', 0.1, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', './checkpoint','directory to save network files')
 cmd:option('--checkpoint',false,'save checkpoints')
 cmd:option('--momentum',0.99,'momentum for training')
+cmd:option('--clip',5,'max allowed norm ')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -271,6 +272,10 @@ function train()
 
          unet:backward(input_image,grad_df)
 
+         if opt.clip>0 then
+            gradParameters:clamp(-opt.clip, opt.clip)
+         end
+         
          return err, gradParameters
       end
 
