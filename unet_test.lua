@@ -23,7 +23,7 @@ cmd:option('--momentum',0.99,'momentum for training')
 cmd:text()
 opt = cmd:parse(arg or {})
 
-XX=14
+XX=10
 
 -- to do:
 -- nn.Dropout
