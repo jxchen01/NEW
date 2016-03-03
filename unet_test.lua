@@ -86,7 +86,7 @@ end
 
 
 -- 3. Define the model 
-if(images[1]:size(3)~=(16*XX+92))
+if(images[1]:size(3)~=(16*XX+92)) then
    print('dimenstion mismatch')
    return
 end
