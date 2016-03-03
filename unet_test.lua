@@ -11,8 +11,8 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
 cmd:option('--imageDir', './data', 'the directory to load')
-cmd:option('--LabelDir', './data', 'the directory to load')
-cmd:option('--ext','.png','only load a specific type of images')
+cmd:option('--labelDir', './data', 'the directory to load')
+cmd:option('--ext','.tif','only load a specific type of images')
 cmd:option('--epoch',5000,'the number of iterations trained on the whole dataset')
 cmd:option('--learningRate',0.001,'initial learning rate')
 cmd:option('--dropoutProb', -1, 'probability of zeroing a neuron (dropout probability)')
@@ -26,14 +26,10 @@ opt = cmd:parse(arg or {})
 XX=10
 
 -- to do:
--- nn.Dropout
 -- nninit
--- momentum 
 -- dynamic lr 
 -- maxNorm 
 -- normCutOff
-
---[[
 
 -- 1. Get the list of files in the given directory
 
@@ -77,7 +73,8 @@ for i, file in ipairs(files_lab) do
    table.insert(labels, loader:forward(image.load(file)) )
 end
 
---]]
+-- random data for test 
+--[[
 images={}
 labels={}
 
@@ -85,18 +82,14 @@ for kk=1,5 do
    table.insert(images,torch.rand(1,16*XX+92,16*XX+92))
    table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2))
 end
+--]]
+
 
 -- 3. Define the model 
---[[
 if(images[1]:size(3)~=(16*XX+92))
    print('dimenstion mismatch')
    return
 end
---]]
-
---input_image = torch.rand(2,1,16*XX+92,16*XX+92):cuda()
---label_image = torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2)
-
 
 input = nn.Identity()()
 
@@ -236,31 +229,6 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
 criterion = nn.CrossEntropyCriterion():cuda()
 
 collectgarbage()
---]]
-
--- check the number of parameters
---[[ 
-local params, gradParams = unet:getParameters()
-print(#params)
-print(#gradParams)
---]]
-
---unet = nn.gModule({input},{L1}):cuda()
---cudnn.convert(unet,cudnn):cuda()
---criterion = cudnn.SpatialCrossEntropyCriterion():cuda()
-
---[[
-output_image = unet:forward(input_image)
-
-
-local err = criterion:forward(output_image, label_image)
-local gradCriterion = criterion:backward(output_image, label_image)
-unet:zeroGradParameters()
-unet:backward(input_image,gradCriterion)
-unet:updateParameters(0.05)
-
-print(err)
---]]
 
 -- Training 
 
