@@ -286,14 +286,10 @@ function train()
 
    image_index = torch.randperm(#images):split(1)
    print(image_index)
-   for i, idx in ipairs(image_index) do
+   for i =1,#images do
 
-      print('xx')
-      print(idx)
-      print(images[1]:size(3))
-      print(images[idx]:size(3))
-      local input_image=images[idx]:cuda()
-      local label_image=labels[idx]:cuda()
+      local input_image=images[image_index[i]]:cuda()
+      local label_image=labels[image_index[i]]:cuda()
       
       local feval = function (x)
          if x ~= parameters then parameters:copy(x) end
