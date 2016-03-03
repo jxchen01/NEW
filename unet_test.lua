@@ -272,9 +272,9 @@ function train()
          local err = criterion:forward(output_image, label_image)
          local grad_df = criterion:backward(output_image, label_image)
 
-         print('Epoch '..epoch..' ('..i..'): Err='..err)
-
          print(output_image)
+
+         print('Epoch '..epoch..' ('..i..'): Err='..err)
 
          unet:backward(input_image,grad_df)
 
