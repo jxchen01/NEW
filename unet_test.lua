@@ -82,7 +82,7 @@ images={}
 labels={}
 
 for kk=1,5 do
-   table.insert(images,torch.rand(2,1,16*XX+92,16*XX+92))
+   table.insert(images,torch.rand(1,16*XX+92,16*XX+92))
    table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2))
 end
 
@@ -272,6 +272,7 @@ end
 
 parameters,gradParameters = unet:getParameters()
 
+--[[]
 config = {learningRate=opt.learningRate,
           momentum=opt.momentum}
 
@@ -280,15 +281,12 @@ function train()
    unet:training()
    epoch = epoch or 1
 
-   -- drop learning rate periodically 
-   -- xxxxx
-   -- xxxxx
-
    image_index = torch.randperm(#images):long()
    for i =1,#images do
-
-      local input_image=images[image_index[i]]:cuda()
-      local label_image=labels[image_index[i]]:cuda()
+      
+      local idx = image_index[i]
+      local input_image=images[idx]:cuda()
+      local label_image=labels[idx]:cuda()
       
       local feval = function (x)
          if x ~= parameters then parameters:copy(x) end
@@ -316,12 +314,15 @@ for iter=1, opt.epoch do
    collectgarbage()
 end
 
+--]]
+
 -- Traininig by Manual Loop 
---[[
+
 lr = opt.learningRate
 for k=1, opt.epoch do
-   image_index = torch.randperm(#images)
-   for i, idx in ipairs(image_index) do
+   image_index = torch.randperm(#images):long()
+   for i =1, #images do
+      local idx = image_index[i]
       input_image=images[idx]:cuda()
       label_image=labels[idx]:cuda()
 
@@ -344,6 +345,6 @@ for k=1, opt.epoch do
       torch.save(filename,unet);
    end
 end
---]]
+
 
 
