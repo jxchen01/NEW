@@ -37,7 +37,7 @@ files = {}
 
 for file in paths.files(opt.imageDir) do
    if file:find(opt.ext .. '$') then
-      table.insert(files, paths.concat(opt.imgDir,file))
+      table.insert(files, paths.concat(opt.imageDir,file))
    end
 end
 
@@ -48,15 +48,17 @@ end
 table.sort(files, function (a,b) return a < b end)
 
 files_lab ={}
-for file in paths.files(opt.LabelDir) do 
+for file in paths.files(opt.labelDir) do 
    if file:find(opt.ext .. '$') then
-      table.insert(files_lab, paths.concat(opt,LabelDir,file))
+      table.insert(files_lab, paths.concat(opt,labelDir,file))
    end
 end
 
 if #files_lab == 0 then
    error('given directory doesnt contain any files of type: ' .. opt.ext)
 end
+
+table.sort(files_lab, function (a,b) return a < b end)
 
 -- 2. Load all the files into RAM
 -- "images" is a table of tensors of size 1 x L x L 
