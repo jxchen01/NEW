@@ -3,6 +3,7 @@ require 'nngraph'
 require 'optim'
 require 'cutorch'
 require 'cunn'
+require 'image'
 
 cutorch.setDevice(2)
 
