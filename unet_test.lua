@@ -23,6 +23,8 @@ cmd:option('--momentum',0.99,'momentum for training')
 cmd:text()
 opt = cmd:parse(arg or {})
 
+XX=14
+
 -- to do:
 -- nn.Dropout
 -- nninit
@@ -83,8 +85,6 @@ labels={torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2),
 
 
 -- 3. Define the model 
-XX=14
-
 --[[
 if(images[1]:size(3)~=(16*XX+92))
    print('dimenstion mismatch')
