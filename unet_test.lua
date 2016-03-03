@@ -11,9 +11,9 @@ cutorch.setDevice(2)
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
-cmd:option('--imageDir', './data', 'the directory to load')
-cmd:option('--labelDir', './data', 'the directory to load')
-cmd:option('--ext','.tif','only load a specific type of images')
+cmd:option('--imageDir', '/home/jchen16/NEW/data/train/', 'the directory to load')
+cmd:option('--labelDir', '/home/jchen16/NEW/data/label/', 'the directory to load')
+cmd:option('--ext','.png','only load a specific type of images')
 cmd:option('--epoch',5000,'the number of iterations trained on the whole dataset')
 cmd:option('--learningRate',0.001,'initial learning rate')
 cmd:option('--dropoutProb', -1, 'probability of zeroing a neuron (dropout probability)')
@@ -96,7 +96,7 @@ end
 
 input = nn.Identity()()
 
-L1a=nn.SpatialConvolution(1, 64, 3, 3, 1, 1, 0, 0)(input)
+L1a=nn.SpatialConvolution(3, 64, 3, 3, 1, 1, 0, 0)(input)
 L1b=nn.ReLU(true)(L1a)
 L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
 if opt.dropoutProb>0 then
