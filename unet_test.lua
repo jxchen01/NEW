@@ -50,7 +50,7 @@ table.sort(files, function (a,b) return a < b end)
 files_lab ={}
 for file in paths.files(opt.labelDir) do 
    if file:find(opt.ext .. '$') then
-      table.insert(files_lab, paths.concat(opt,labelDir,file))
+      table.insert(files_lab, paths.concat(opt.labelDir,file))
    end
 end
 
