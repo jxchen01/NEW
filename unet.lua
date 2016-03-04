@@ -27,6 +27,7 @@ cmd:option('--XX',10,'the key parameter to determine the size of image')
 cmd:text()
 opt = cmd:parse(arg or {})
 
+XX=opt.XX
 
 -- 1. Get the list of files in the given directory
 
