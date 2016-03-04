@@ -254,7 +254,7 @@ function train()
          config.learningRate = config.learningRate * 0.5
       end
 
-      if(config.momentum < 0.9)
+      if config.momentum < 0.9 then
          config.momentum = config.momentum + 0.1
       end
    end 
