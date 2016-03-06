@@ -274,8 +274,6 @@ function train()
          local input_image=images[idx]:cuda()
          local label_image=labels[idx]:cuda()
 
-         print(input_image:size())
-
          local output_image = unet:forward(input_image)
          local err = criterion:forward(output_image, label_image)
          local grad_df = criterion:backward(output_image, label_image)
@@ -295,9 +293,7 @@ function train()
       optim.sgd(feval, parameters, config)
 
       -- clean 
-      if i%10==0 then
-         collectgarbage()
-      end
+      collectgarbage()
    end
 
    if opt.checkpoint>0  and epoch%opt.checkpoint ==0 then
