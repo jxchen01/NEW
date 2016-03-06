@@ -57,7 +57,7 @@ reshape_back = nn.Reshape((16*XX-92),(16*XX-92),2)
 
 pad = nn.SpatialZeroPadding(92,92,92,92) --the padding filter
 
-for i=1, 2 do
+for i=1, 1 do
 --for i=1, #images do
 	-- padding 
 	local image_whole = pad:forward(images[i])
@@ -94,14 +94,18 @@ for i=1, 2 do
     	b=unet:forward(tiles[ti]:cuda()):double()
     	c=softmax:forward(b)
     	d=reshape_back:forward(c)
-        ff=d:sub(1,dd,1,dd,2,2):transpose(2,3):transpose(1,2)
+        ff=d:select(3,2)
         --ff:copy(d:select(3,2))
-    	table.insert(tile_output, ff)  -- cell has label 2        
+    	table.insert(tile_output, ff)  -- cell has label 2   
+
+        if ti==7 then
+            image.save('test1.png',tile_output[7])
+        end
     end
 
-    print(tile_output[7])
-
-    image.save('test2.jpeg',tile_output[7])
+    --print(tile_output[7])
+    print(#tile_output)
+    image.save('test2.png',tile_output[7])
 
     --[[
     -- assemble back to the whole image
