@@ -113,7 +113,7 @@ for i=1, #images do
     			y2=yi*dd
     		end
     		tile_idx=tile_idx+1
-    		output_image:sub(x1, x2, y1, y2):copy(tiles[tile_idx]:sub(dd-(x2-x1),dd,dd-(y2-y1),dd))
+    		output_image:sub(x1, x2, y1, y2):copy(tile_output[tile_idx]:sub(dd-(x2-x1),dd,dd-(y2-y1),dd))
     	end
     end
     
