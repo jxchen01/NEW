@@ -14,14 +14,14 @@ cmd:text('Options:')
 cmd:option('--imageDir', '/home/jchen16/NEW/data/X10/train/', 'the directory to load')
 cmd:option('--labelDir', '/home/jchen16/NEW/data/X10/label/', 'the directory to load')
 cmd:option('--ext','.png','only load a specific type of images')
-cmd:option('--epoch',500,'the number of iterations trained on the whole dataset')
-cmd:option('--learningRate',0.004,'initial learning rate')
-cmd:option('--minLR',0.0001,'minimal learning rate')
+cmd:option('--epoch',100,'the number of iterations trained on the whole dataset')
+cmd:option('--learningRate',0.01,'initial learning rate')
+cmd:option('--minLR',0.001,'minimal learning rate')
 cmd:option('--dropoutProb', 0.25, 'probability of zeroing a neuron (dropout probability)')
-cmd:option('--uniform', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
+cmd:option('--uniform', 0.1, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to save network files')
 cmd:option('--checkpoint',10,'save checkpoints')
-cmd:option('--momentum',0.65,'momentum for training')
+cmd:option('--momentum',0.591,'momentum for training')
 cmd:option('--clip',5,'max allowed norm ')
 cmd:option('--XX',10,'the key parameter to determine the size of image')
 cmd:text()
@@ -256,7 +256,7 @@ function train()
       end
 
       if config.momentum < 0.9 then
-         config.momentum = config.momentum + 0.1
+         config.momentum = config.momentum + 0.15
       end
    end 
 
