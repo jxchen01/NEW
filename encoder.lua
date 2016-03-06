@@ -85,6 +85,9 @@ for i=1, #images do
     	end
     end
 
+    image.save('test1.png',tiles[1])
+    image.save('test2.png',tiles[13])
+
     -- process each tile
     local tile_output={}
     for ti=1,#tiles do
@@ -94,8 +97,7 @@ for i=1, #images do
     	table.insert(tile_output, d:select(3,2))  -- cell has label 2
     end
 
-    image.save('test1.png',tile_output[1])
-    image.save('test2.png',tile_output[13])
+
 
     --[[
     -- assemble back to the whole image
