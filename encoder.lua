@@ -85,9 +85,9 @@ for i=1, #images do
     	end
     end
 
-    image.save('test1.png',tiles[1])
-    image.save('test2.png',tiles[13])
-
+    image.save('test_w.png',image_whole)
+    image.save('test2.png',tiles[7])
+--[[
     -- process each tile
     local tile_output={}
     for ti=1,#tiles do
@@ -98,7 +98,7 @@ for i=1, #images do
     end
 
 
-
+--]]
     --[[
     -- assemble back to the whole image
     output_image = torch.Tensor(images[i]:size(2),images[i]:size(3))
