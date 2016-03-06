@@ -273,7 +273,7 @@ function train()
          gradParameters:zero()
 
          local idx = image_index[i]
-         if opt.RAM then
+         if not opt.RAM then
             local input_image=images[idx]:cuda()
             local label_image=labels[idx]:cuda()
          else
