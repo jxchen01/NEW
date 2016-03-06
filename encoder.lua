@@ -86,46 +86,17 @@ for i=1, 1 do
     	end
     end
 
---[[
-    -- process each tile
-    local tile_output={}
-    --local b, c, d
-    --local ff 
-    for ti=1,#tiles do
-    	local b=unet:forward(tiles[ti]:cuda()):double()
-    	local c=softmax:forward(b)
-    	local d=reshape_back:forward(c)
-        local ff=d:select(3,2)
-    	table.insert(tile_output, ff)  -- cell has label 2   
-
-        if ti==5 then
-            image.save('test1.png',tile_output[1])
-        end
-    end
-
-    --print(tile_output[7])
-    print(#tile_output)
-    image.save('test2.png',tile_output[1])
---]]
-
     -- process each tile
     local tile_output=torch.Tensor(#tiles,dd,dd)
-    --local b, c, d
-    --local ff 
     for ti=1,#tiles do
         local b=unet:forward(tiles[ti]:cuda()):double()
         local c=softmax:forward(b)
         local d=reshape_back:forward(c)
         local ff=d:select(3,2)
         tile_output[ti]:copy(ff)  -- cell has label 2   
-
-        if ti==5 then
-            image.save('test1.png',tile_output[1])
-        end
     end
 
-    image.save('test2.png',tile_output[1])
-    --[[
+    
     -- assemble back to the whole image
     output_image = torch.Tensor(images[i]:size(2),images[i]:size(3))
     local tile_idx=0
@@ -145,16 +116,16 @@ for i=1, 1 do
     			y2=yi*dd
     		end
     		tile_idx=tile_idx+1
-    		output_image:sub(x1, x2, y1, y2):copy(tile_output[tile_idx]:sub(dd-(x2-x1),dd,dd-(y2-y1),dd))
+    		output_image:sub(x1, x2, y1, y2):copy(tile_output:select(1,tile_idx):sub(dd-(x2-x1),dd,dd-(y2-y1),dd))
     	end
     end
 
- --   image.save('test3.png',output_image)
+   image.save('test1.png',output_image)
     
     -- write the result to file
     local filename=string.format('%s/prob_%d.png',opt.outputDir,i);
     image.save(filename,output_image)
-     --]]
+     
 end
 
 --[[
