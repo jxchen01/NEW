@@ -84,11 +84,10 @@ for i=1, #images do
             print(x0)
             print(x0+windowSize-1)
             print(images[i]:size(2))
-            print(image_whole:size(2))
             print(y0)
             print(y0+windowSize-1)
             print(images[i]:size(3))
-            print(image_whole:size(3))
+            print(image_whole:size())
     		table.insert(tiles, image_whole:sub(1,3,x0,x0+windowSize-1,y0,y0+windowSize-1))
     	end
     end
