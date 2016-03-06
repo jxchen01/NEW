@@ -273,12 +273,13 @@ function train()
          gradParameters:zero()
 
          local idx = image_index[i]
+         local input_image, label_image
          if not opt.RAM then
-            local input_image=images[idx]:cuda()
-            local label_image=labels[idx]:cuda()
+            input_image=images[idx]:cuda()
+            label_image=labels[idx]:cuda()
          else
-            local input_image=image.load(files[idx]):cuda()
-            local label_image=torch.reshape(image.load(files_lab[idx],1,'byte'),(16*XX-92)*(16*XX-92),1):cuda()
+            input_image=image.load(files[idx]):cuda()
+            label_image=torch.reshape(image.load(files_lab[idx],1,'byte'),(16*XX-92)*(16*XX-92),1):cuda()
             print(input_image:size())
             print(label_image:size())
          end
