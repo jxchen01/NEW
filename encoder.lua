@@ -93,16 +93,8 @@ for i=1, 2 do
     	b=unet:forward(tiles[ti]:cuda()):double()
     	c=softmax:forward(b)
     	d=reshape_back:forward(c)
-        ff=d:select(3,2)
-        if ti==7 then
-            image.save('test4.png',ff)
-        end
-    	table.insert(tile_output, ff)  -- cell has label 2
-        if ti==7 then
-            image.save('test1.png',tile_output[6])
-            image.save('test3.png',ff)
-        end
-        
+        ff:copy(d:select(3,2))
+    	table.insert(tile_output, ff)  -- cell has label 2        
     end
 
     print(tile_output[7])
