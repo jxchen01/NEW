@@ -105,7 +105,7 @@ for i=1, 2 do
         
     end
 
-    print(tile_output[7]:size())
+    print(tile_output[7])
 
     image.save('test2.png',tile_output[7])
 
