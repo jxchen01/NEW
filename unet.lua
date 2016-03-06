@@ -221,7 +221,7 @@ L10=nn.Reshape((16*XX-92)*(16*XX-92),2)(L10b)
 
 unet = nn.gModule({input},{L10}):cuda()
 
---[[
+
 local finput, fgradInput
 unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
                            finput = finput or m.finput
@@ -230,7 +230,7 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                            m.fgradInput = fgradInput
                         end
             end)
---]]
+
 
 criterion = nn.CrossEntropyCriterion():cuda()
 
