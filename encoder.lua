@@ -94,6 +94,10 @@ for i=1, #images do
     	table.insert(tile_output, d:select(3,2))  -- cell has label 2
     end
 
+    image.save('test1.png',tile_output[1])
+    image.save('test2.png',tile_output[13])
+
+    --[[
     -- assemble back to the whole image
     output_image = torch.Tensor(images[i]:size(2),images[i]:size(3))
     local tile_idx=0
@@ -118,8 +122,9 @@ for i=1, #images do
     end
     
     -- write the result to file
-    local filename=string.format('%s/prob_%f.png',opt.outputDir,i);
+    local filename=string.format('%s/prob_%d.png',opt.outputDir,i);
     image.save(filename,output_image)
+    --]]
 end
 
 --[[
