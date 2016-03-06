@@ -81,7 +81,7 @@ for i=1, #images do
     		else
     			y0=1+dd*(yi-1)
     		end
-    		table.insert(tiles, image_whole:sub(1,3,x0,x0+xdim-1,y0,y0+ydim-1))
+    		table.insert(tiles, image_whole:sub(1,3,x0,x0+dd-1,y0,y0+dd-1))
     	end
     end
 
