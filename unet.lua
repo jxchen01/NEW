@@ -14,14 +14,14 @@ cmd:text('Options:')
 cmd:option('--imageDir', '/home/jchen16/NEW/data/X10/train/', 'the directory to load')
 cmd:option('--labelDir', '/home/jchen16/NEW/data/X10/label/', 'the directory to load')
 cmd:option('--ext','.png','only load a specific type of images')
-cmd:option('--epoch',100,'the number of iterations trained on the whole dataset')
+cmd:option('--epoch',50,'the number of iterations trained on the whole dataset')
 cmd:option('--learningRate',0.01,'initial learning rate')
 cmd:option('--minLR',0.001,'minimal learning rate')
 cmd:option('--dropoutProb', 0.25, 'probability of zeroing a neuron (dropout probability)')
 cmd:option('--uniform', 0.1, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to save network files')
-cmd:option('--checkpoint',10,'save checkpoints')
-cmd:option('--momentum',0.591,'momentum for training')
+cmd:option('--checkpoint',1,'save checkpoints')
+cmd:option('--momentum',0.69,'momentum for training')
 cmd:option('--clip',5,'max allowed norm ')
 cmd:option('--XX',10,'the key parameter to determine the size of image')
 cmd:text()
@@ -250,7 +250,7 @@ function train()
    unet:training()
    epoch = epoch or 1
 
-   if epoch%10==0 then
+   if epoch%opt.checkpoint==0 then
       if config.learningRate > opt.minLR then
          config.learningRate = config.learningRate * 0.5
       end
