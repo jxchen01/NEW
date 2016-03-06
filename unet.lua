@@ -24,6 +24,7 @@ cmd:option('--checkpoint',1,'save checkpoints')
 cmd:option('--momentum',0.69,'momentum for training')
 cmd:option('--clip',5,'max allowed norm ')
 cmd:option('--XX',10,'the key parameter to determine the size of image')
+cmd:option('--RAM',false,'false means load all images to RAM')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -58,20 +59,20 @@ end
 
 table.sort(files_lab, function (a,b) return a < b end)
 
+if not opt.RAM
 -- 2. Load all the files into RAM
 -- "images" is a table of tensors of size 1 x L x L 
-images = {}
-for i,file in ipairs(files) do
-   -- load each image
-   table.insert(images, image.load(file))
-end
+   images = {}
+   for i,file in ipairs(files) do
+      -- load each image
+      table.insert(images, image.load(file))
+   end
 
---loader = nn.Reshape((16*XX-92)*(16*XX-92),1)
-
-labels = {}
-for i, file in ipairs(files_lab) do 
-   table.insert(labels, torch.reshape(image.load(file,1,'byte'),(16*XX-92)*(16*XX-92),1))
-   --table.insert(labels, loader:forward(image.load(file,1,'byte')) )
+   labels = {}
+   for i, file in ipairs(files_lab) do 
+      table.insert(labels, torch.reshape(image.load(file,1,'byte'),(16*XX-92)*(16*XX-92),1))
+      --table.insert(labels, loader:forward(image.load(file,1,'byte')) )
+   end
 end
 
 -- random data for test 
@@ -84,15 +85,16 @@ for kk=1,5 do
    table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2))
 end
 --]]
-print(#labels)
-print(#images)
+
 
 
 -- 3. Define the model 
+--[[
 if(images[1]:size(3)~=(16*XX+92)) then
    print('dimenstion mismatch')
    return
 end
+--]]
 
 input = nn.Identity()()
 
@@ -263,16 +265,21 @@ function train()
       end
    end 
 
-   image_index = torch.randperm(#images):long()
-   for i =1,#images do
+   image_index = torch.randperm(#files):long()
+   for i =1,#files do
       
       local feval = function (x)
          if x ~= parameters then parameters:copy(x) end
          gradParameters:zero()
 
          local idx = image_index[i]
-         local input_image=images[idx]:cuda()
-         local label_image=labels[idx]:cuda()
+         if opt.RAM then
+            local input_image=images[idx]:cuda()
+            local label_image=labels[idx]:cuda()
+         else
+            local input_image=image.load(files[idx]):cuda()
+            local label_image=image.load(files_lab[idx]):cuda()
+         end
 
          local output_image = unet:forward(input_image)
          local err = criterion:forward(output_image, label_image)
