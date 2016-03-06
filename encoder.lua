@@ -57,8 +57,7 @@ reshape_back = nn.Reshape((16*XX-92),(16*XX-92),2)
 
 pad = nn.SpatialZeroPadding(92,92,92,92) --the padding filter
 
-for i=1, 1 do
---for i=1, #images do
+for i=1, #images do
 	-- padding 
 	local image_whole = pad:forward(images[i])
 
@@ -119,8 +118,6 @@ for i=1, 1 do
     		output_image:sub(x1, x2, y1, y2):copy(tile_output:select(1,tile_idx):sub(dd-(x2-x1),dd,dd-(y2-y1),dd))
     	end
     end
-
-   image.save('test1.png',output_image)
     
     -- write the result to file
     local filename=string.format('%s/prob_%d.png',opt.outputDir,i);
