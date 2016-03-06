@@ -99,7 +99,7 @@ for i=1, 2 do
         end
     	table.insert(tile_output, ff)  -- cell has label 2
         if ti==7 then
-            image.save('test1.png',tile_output[7])
+            image.save('test1.png',tile_output[6])
             image.save('test3.png',ff)
         end
         
@@ -109,7 +109,7 @@ for i=1, 2 do
 
     image.save('test2.png',tile_output[7])
 
-    
+    --[[
     -- assemble back to the whole image
     output_image = torch.Tensor(images[i]:size(2),images[i]:size(3))
     local tile_idx=0
@@ -138,7 +138,7 @@ for i=1, 2 do
     -- write the result to file
     local filename=string.format('%s/prob_%d.png',opt.outputDir,i);
     image.save(filename,output_image)
-    
+     --]]
 end
 
 --[[
