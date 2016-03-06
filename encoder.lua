@@ -94,7 +94,7 @@ for i=1, 2 do
     	b=unet:forward(tiles[ti]:cuda()):double()
     	c=softmax:forward(b)
     	d=reshape_back:forward(c)
-        ff=d:sub(1,dd,1,dd,2,2)
+        ff=d:sub(1,dd,1,dd,2,2):transpose(2,3):transpose(1,2)
         --ff:copy(d:select(3,2))
     	table.insert(tile_output, ff)  -- cell has label 2        
     end
