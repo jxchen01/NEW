@@ -101,7 +101,7 @@ for i=1, 2 do
 
     print(tile_output[7])
 
-    image.save('test2.png',tile_output[7])
+    image.save('test2.jpeg',tile_output[7])
 
     --[[
     -- assemble back to the whole image
