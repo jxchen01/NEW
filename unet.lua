@@ -245,7 +245,7 @@ if opt.uniform > 0 then
 end
 
 parameters,gradParameters = unet:getParameters()
-
+--[[
 
 config = {learningRate=opt.learningRate,
           momentum=opt.momentum}
@@ -320,10 +320,10 @@ end
 for iter=1, opt.epoch do
    train()
 end
-
+--]]
 
 -- Traininig by Manual Loop 
---[[
+
 lr = opt.learningRate
 for k=1, opt.epoch do
    image_index = torch.randperm(#images):long()
@@ -353,6 +353,6 @@ for k=1, opt.epoch do
       torch.save(filename,unet);
    end
 end
---]]
+
 
 
