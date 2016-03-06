@@ -94,6 +94,9 @@ for i=1, 2 do
     	c=softmax:forward(b)
     	d=reshape_back:forward(c)
         ff=d:select(3,2)
+        if ti==7 then
+            image.save('test4.png',ff)
+        end
     	table.insert(tile_output, ff)  -- cell has label 2
         if ti==7 then
             image.save('test1.png',tile_output[7])
