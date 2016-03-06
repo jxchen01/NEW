@@ -46,7 +46,7 @@ for i,file in ipairs(files) do
 end
 
 -- 3. Load Model
-unet=torch.load('net_10.000000.bin')
+unet=torch.load(opt.modelPath)
 unet:testing()
 
 -- 4. Define post-processing layers
