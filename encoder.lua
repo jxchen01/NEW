@@ -86,6 +86,7 @@ for i=1, 1 do
     	end
     end
 
+--[[
     -- process each tile
     local tile_output={}
     --local b, c, d
@@ -105,7 +106,25 @@ for i=1, 1 do
     --print(tile_output[7])
     print(#tile_output)
     image.save('test2.png',tile_output[1])
+--]]
 
+    -- process each tile
+    local tile_output=torch.Tensor(#tiles,dd,dd)
+    --local b, c, d
+    --local ff 
+    for ti=1,#tiles do
+        local b=unet:forward(tiles[ti]:cuda()):double()
+        local c=softmax:forward(b)
+        local d=reshape_back:forward(c)
+        local ff=d:select(3,2)
+        tile_output[ti]:copy(ff)  -- cell has label 2   
+
+        if ti==5 then
+            image.save('test1.png',tile_output[1])
+        end
+    end
+
+    image.save('test2.png',tile_output[1])
     --[[
     -- assemble back to the whole image
     output_image = torch.Tensor(images[i]:size(2),images[i]:size(3))
