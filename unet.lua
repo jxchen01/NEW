@@ -302,7 +302,7 @@ function train()
       end
 
       --optim.rmsprop(feval, parameters, config)
-      optim.sgd(feval, parameters, config)
+      optim.nag(feval, parameters, config)
 
       -- clean 
       collectgarbage()
