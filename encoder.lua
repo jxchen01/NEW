@@ -86,13 +86,8 @@ for i=1, 2 do
     	end
     end
 
-    image.save('test_w.png',image_whole)
-    image.save('test_s.png',images[7])
-    image.save('test2.png',tiles[7])
+    image.save('test1.png',tiles[7])
 
-    print(images[7].size())
-
---[[
     -- process each tile
     local tile_output={}
     for ti=1,#tiles do
@@ -102,9 +97,9 @@ for i=1, 2 do
     	table.insert(tile_output, d:select(3,2))  -- cell has label 2
     end
 
+    image.save('test2.png',tile_output[7])
 
---]]
-    --[[
+    
     -- assemble back to the whole image
     output_image = torch.Tensor(images[i]:size(2),images[i]:size(3))
     local tile_idx=0
@@ -127,11 +122,13 @@ for i=1, 2 do
     		output_image:sub(x1, x2, y1, y2):copy(tile_output[tile_idx]:sub(dd-(x2-x1),dd,dd-(y2-y1),dd))
     	end
     end
+
+    image.save('test3.png',output_image)
     
     -- write the result to file
     local filename=string.format('%s/prob_%d.png',opt.outputDir,i);
     image.save(filename,output_image)
-    --]]
+    
 end
 
 --[[
