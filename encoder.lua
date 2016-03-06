@@ -105,6 +105,8 @@ for i=1, 2 do
         
     end
 
+    print(tile_output[7]:size())
+
     image.save('test2.png',tile_output[7])
 
     
@@ -131,7 +133,7 @@ for i=1, 2 do
     	end
     end
 
-    image.save('test3.png',output_image)
+ --   image.save('test3.png',output_image)
     
     -- write the result to file
     local filename=string.format('%s/prob_%d.png',opt.outputDir,i);
