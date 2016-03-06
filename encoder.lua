@@ -94,7 +94,7 @@ for i=1, 2 do
     	local d=reshape_back:forward(c)
         local ff=d:select(3,2)
     	table.insert(tile_output, ff)  -- cell has label 2
-        if(ti==7)
+        if ti==7 then
             image.save('test1.png',tile_output[7])
             image.save('test3.png',ff)
         end
