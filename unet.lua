@@ -84,6 +84,8 @@ for kk=1,5 do
    table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2))
 end
 --]]
+print(#labels)
+print(#images)
 
 
 -- 3. Define the model 
@@ -217,6 +219,7 @@ L10=nn.Reshape((16*XX-92)*(16*XX-92),2)(L10b)
 
 unet = nn.gModule({input},{L10}):cuda()
 
+--[[
 local finput, fgradInput
 unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
                            finput = finput or m.finput
@@ -225,7 +228,7 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                            m.fgradInput = fgradInput
                         end
             end)
-
+--]]
 
 criterion = nn.CrossEntropyCriterion():cuda()
 
@@ -271,6 +274,8 @@ function train()
          local input_image=images[idx]:cuda()
          local label_image=labels[idx]:cuda()
 
+         print(input_image:size())
+
          local output_image = unet:forward(input_image)
          local err = criterion:forward(output_image, label_image)
          local grad_df = criterion:backward(output_image, label_image)
@@ -288,6 +293,11 @@ function train()
 
       --optim.rmsprop(feval, parameters, config)
       optim.sgd(feval, parameters, config)
+
+      -- clean 
+      if i%10==0 then
+         collectgarbage()
+      end
    end
 
    if opt.checkpoint>0  and epoch%opt.checkpoint ==0 then
@@ -301,7 +311,6 @@ end
 
 for iter=1, opt.epoch do
    train()
-   collectgarbage()
 end
 
 
