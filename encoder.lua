@@ -57,7 +57,8 @@ reshape_back = nn.Reshape((16*XX-92),(16*XX-92),2)
 
 pad = nn.SpatialZeroPadding(92,92,92,92) --the padding filter
 
-for i=1, #images do
+for i=1, 2 do
+--for i=1, #images do
 	-- padding 
 	local image_whole = pad:forward(images[i])
 
@@ -86,8 +87,11 @@ for i=1, #images do
     end
 
     image.save('test_w.png',image_whole)
+    image.save('test_s.png',images[7])
     image.save('test2.png',tiles[7])
-    print(tiles[1]:size())
+
+    print(images[7].size())
+
 --[[
     -- process each tile
     local tile_output={}
