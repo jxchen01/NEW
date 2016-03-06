@@ -87,6 +87,7 @@ for i=1, #images do
 
     image.save('test_w.png',image_whole)
     image.save('test2.png',tiles[7])
+    print(tiles[1]:size())
 --[[
     -- process each tile
     local tile_output={}
