@@ -92,7 +92,7 @@ for i=1, 2 do
     for ti=1,#tiles do
     	b=unet:forward(tiles[ti]:cuda()):double()
     	c=softmax:forward(b)
-    	=reshape_back:forward(c)
+    	d=reshape_back:forward(c)
         ff=d:select(3,2)
     	table.insert(tile_output, ff)  -- cell has label 2
         if ti==7 then
