@@ -88,14 +88,15 @@ for i=1, 2 do
 
     -- process each tile
     local tile_output={}
+    local b, c, d, ff
     for ti=1,#tiles do
-    	local b=unet:forward(tiles[ti]:cuda()):double()
-    	local c=softmax:forward(b)
-    	local d=reshape_back:forward(c)
+    	b=unet:forward(tiles[ti]:cuda()):double()
+    	c=softmax:forward(b)
+    	=reshape_back:forward(c)
         ff=d:select(3,2)
     	table.insert(tile_output, ff)  -- cell has label 2
         if ti==7 then
-            image.save('test1.png',tile_output[-1])
+            image.save('test1.png',tile_output[7])
             image.save('test3.png',ff)
         end
         
