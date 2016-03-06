@@ -302,7 +302,7 @@ for iter=1, opt.epoch do
       end
 
       --optim.rmsprop(feval, parameters, config)
-      optim.nag(feval, parameters, config)
+      optim.sgd(feval, parameters, config)
 
       -- clean 
       collectgarbage()
