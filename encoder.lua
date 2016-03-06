@@ -88,7 +88,8 @@ for i=1, 2 do
 
     -- process each tile
     local tile_output={}
-    local b, c, d, ff
+    local b, c, d
+    local ff=torch.Tensor(dd,dd)
     for ti=1,#tiles do
     	b=unet:forward(tiles[ti]:cuda()):double()
     	c=softmax:forward(b)
