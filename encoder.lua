@@ -89,12 +89,13 @@ for i=1, 2 do
     -- process each tile
     local tile_output={}
     local b, c, d
-    local ff=torch.Tensor(dd,dd)
+    local ff 
     for ti=1,#tiles do
     	b=unet:forward(tiles[ti]:cuda()):double()
     	c=softmax:forward(b)
     	d=reshape_back:forward(c)
-        ff:copy(d:select(3,2))
+        ff=d:sub(1,dd,1,dd,2,2)
+        --ff:copy(d:select(3,2))
     	table.insert(tile_output, ff)  -- cell has label 2        
     end
 
