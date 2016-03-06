@@ -92,14 +92,12 @@ for i=1, 2 do
     	local b=unet:forward(tiles[ti]:cuda()):double()
     	local c=softmax:forward(b)
     	local d=reshape_back:forward(c)
-    	table.insert(tile_output, d:select(3,2))  -- cell has label 2
-        ff=d:select(3,2)
-        if ti==7 then
-            image.save('test2.png',ff)
-        end
+        local ff=d:select(3,2)
+    	table.insert(tile_output, ff)  -- cell has label 2
+        
     end
 
-    
+    image.save('test2.png',tile_output[7])
 
     
     -- assemble back to the whole image
