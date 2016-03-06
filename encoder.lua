@@ -47,7 +47,7 @@ end
 
 -- 3. Load Model
 unet=torch.load(opt.modelPath)
-unet:testing()
+unet:evaluate()
 
 -- 4. Define post-processing layers
 softmax = nn.SoftMax()
