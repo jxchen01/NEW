@@ -59,7 +59,7 @@ end
 
 table.sort(files_lab, function (a,b) return a < b end)
 
-if not opt.RAM
+if not opt.RAM then
 -- 2. Load all the files into RAM
 -- "images" is a table of tensors of size 1 x L x L 
    images = {}
