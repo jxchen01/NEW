@@ -278,7 +278,9 @@ function train()
             local label_image=labels[idx]:cuda()
          else
             local input_image=image.load(files[idx]):cuda()
-            local label_image=image.load(files_lab[idx]):cuda()
+            local label_image=torch.reshape(image.load(files_lab[idx],1,'byte'),(16*XX-92)*(16*XX-92),1):cuda()
+            print(input_image:size())
+            print(label_image:size())
          end
 
          local output_image = unet:forward(input_image)
