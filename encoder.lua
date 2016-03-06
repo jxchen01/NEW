@@ -81,12 +81,6 @@ for i=1, #images do
     		else
     			y0=1+dd*(yi-1)
     		end
-            print(x0)
-            print(x0+windowSize-1)
-            print(y0)
-            print(y0+windowSize-1)
-            print(images[i]:size())
-            print(image_whole:size())
     		table.insert(tiles, image_whole:sub(1,3,x0,x0+windowSize-1,y0,y0+windowSize-1))
     	end
     end
@@ -101,20 +95,20 @@ for i=1, #images do
     end
 
     -- assemble back to the whole image
-    output_image = torch.Tensor(images[i].size(2),images[i].size(3))
+    output_image = torch.Tensor(images[i]:size(2),images[i]:size(3))
     local tile_idx=0
     for xi=1,numX do
     	local x1,x2,y1,y2
     	x1=1+(xi-1)*dd
     	if xi==numX then
-    		x2=images[i].size(2)
+    		x2=images[i]:size(2)
     	else
     		x2=xi*dd
     	end
     	for yi=1,numY do
     		y1=1+(yi-1)*dd
     		if yi==numY then
-    			y2=images[i].size(3)
+    			y2=images[i]:size(3)
     		else			
     			y2=yi*dd
     		end
@@ -124,7 +118,7 @@ for i=1, #images do
     end
     
     -- write the result to file
-    local filename=string.format('%s/prob_%f.bin',opt.outputDir,i);
+    local filename=string.format('%s/prob_%f.png',opt.outputDir,i);
     image.save(filename,output_image)
 end
 
