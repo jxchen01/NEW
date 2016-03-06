@@ -88,24 +88,23 @@ for i=1, 1 do
 
     -- process each tile
     local tile_output={}
-    local b, c, d
-    local ff 
+    --local b, c, d
+    --local ff 
     for ti=1,#tiles do
-    	b=unet:forward(tiles[ti]:cuda()):double()
-    	c=softmax:forward(b)
-    	d=reshape_back:forward(c)
-        ff=d:select(3,2)
-        --ff:copy(d:select(3,2))
+    	local b=unet:forward(tiles[ti]:cuda()):double()
+    	local c=softmax:forward(b)
+    	local d=reshape_back:forward(c)
+        local ff=d:select(3,2)
     	table.insert(tile_output, ff)  -- cell has label 2   
 
-        if ti==7 then
-            image.save('test1.png',tile_output[7])
+        if ti==5 then
+            image.save('test1.png',tile_output[1])
         end
     end
 
     --print(tile_output[7])
     print(#tile_output)
-    image.save('test2.png',tile_output[7])
+    image.save('test2.png',tile_output[1])
 
     --[[
     -- assemble back to the whole image
