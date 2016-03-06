@@ -18,7 +18,7 @@ cmd:option('--epoch',50,'the number of iterations trained on the whole dataset')
 cmd:option('--learningRate',0.01,'initial learning rate')
 cmd:option('--minLR',0.001,'minimal learning rate')
 cmd:option('--dropoutProb', 0.25, 'probability of zeroing a neuron (dropout probability)')
-cmd:option('--uniform', 0.1, 'initialize parameters using uniform distribution between -uniform and uniform.')
+cmd:option('--uniform', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to save network files')
 cmd:option('--checkpoint',1,'save checkpoints')
 cmd:option('--momentum',0.69,'momentum for training')
@@ -291,6 +291,8 @@ function train()
          print('Epoch '..epoch..' ('..i..'): Err='..err)
 
          unet:backward(input_image,grad_df)
+
+         print('xx')
 
          if opt.clip>0 then
             gradParameters:clamp(-opt.clip, opt.clip)
