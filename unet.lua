@@ -279,8 +279,6 @@ function train()
          else
             input_image=image.load(files[idx]):cuda()
             label_image=torch.reshape(image.load(files_lab[idx],1,'byte'),(16*XX-92)*(16*XX-92),1):cuda()
-            print(input_image:size())
-            print(label_image:size())
          end
 
          local output_image = unet:forward(input_image)
@@ -290,8 +288,6 @@ function train()
          print('Epoch '..epoch..' ('..i..'): Err='..err)
 
          unet:backward(input_image,grad_df)
-
-         print('xx')
 
          if opt.clip>0 then
             gradParameters:clamp(-opt.clip, opt.clip)
