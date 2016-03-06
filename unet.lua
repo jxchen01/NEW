@@ -250,7 +250,8 @@ config = {learningRate=opt.learningRate,
           momentum=opt.momentum}
 --config={learningRate=opt.learningRate, alpha=0.95}
 
-function train()
+for iter=1, opt.epoch do
+--function train()
    unet:training()
    epoch = epoch or 1
 
@@ -316,9 +317,9 @@ function train()
    epoch = epoch + 1
 end
 
-for iter=1, opt.epoch do
-   train()
-end
+--for iter=1, opt.epoch do
+--   train()
+--end
 
 
 -- Traininig by Manual Loop 
