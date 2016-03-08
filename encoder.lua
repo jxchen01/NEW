@@ -124,18 +124,3 @@ for i=1, #images do
     image.save(filename,output_image)
      
 end
-
---[[
-a=image.load('/home/jchen16/NEW/data/X10/train/1.png')
-a=a:cuda()
-b=unet:forward(a)
-b=b:double()
-
-softmax = nn.SoftMax()
-c=softmax(b)
-
-reshape_back = nn.Reshape((16*XX-92),(16*XX-92),2)
-d=reshape_back:forward(c)
-
-output = d:select(3,2)
---]]
