@@ -126,8 +126,14 @@ for i=1, opt.nIteration do
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
-	inputs = data[data_index[seq_idx]].input:cuda()
-	targets = data[data_index[seq_idx]].target:cuda()
+	input_data = data[data_index[seq_idx]].input
+	target_data = data[data_index[seq_idx]].target
+	local inputs={}
+	local targets={}
+	for j=1,opt.rho do 
+		table.insert(inputs,input_data[j]:cuda())
+		table.insert(targets,target_data[j]:cuda())
+	end
 
 	-- build initial cell state 
 	init_state= data[data_index[seq_idx]].init
