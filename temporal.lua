@@ -20,6 +20,8 @@ cmd:option('--clip',5,'max allowed gradient norm in BPTT')
 cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
 cmd:option('--nIteration',10,'the number of training iterations')
+cmd:text()
+opt = cmd:parse(arg or {})
 -- set GPU device
 cutorch.setDevice(opt.gpu)
 
