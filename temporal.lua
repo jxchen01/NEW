@@ -146,7 +146,7 @@ for i=1, opt.nIteration do
 			gradParams:clamp(-opt.clip, opt.clip)
 		end
 
-		return err gradParams
+		return err, gradParams
 	end
 
 	local _, loss = optim.adam(feval, params, optim_config)
