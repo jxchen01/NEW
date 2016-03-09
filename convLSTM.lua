@@ -140,6 +140,7 @@ function ConvLSTM:updateOutput(input)
       else
          self.zeroTensor:resize(self.outputSize,input:size(2),input:size(3)):zero()
       end
+      print(self.zeroTensor:size())
    else
       -- previous output and memory of this module
       prevOutput = self.output
