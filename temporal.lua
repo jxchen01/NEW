@@ -1,6 +1,6 @@
 require 'nn'
 require 'rnn'
-require 'ConvLSTM'
+require 'convLSTM'
 require 'optim'
 require 'cutorch'
 require 'cunn'
