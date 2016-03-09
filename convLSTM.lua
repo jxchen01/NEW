@@ -152,6 +152,9 @@ function ConvLSTM:updateOutput(input)
       self:recycle()
       local recurrentModule = self:getStepModule(self.step)
       -- the actual forward propagation
+      print(input:size())
+      print(prevOutput:size())
+      print(prevCell:size())
       output, cell = unpack(recurrentModule:updateOutput{input, prevOutput, prevCell})
    else
       output, cell = unpack(self.recurrentModule:updateOutput{input, prevOutput, prevCell})
