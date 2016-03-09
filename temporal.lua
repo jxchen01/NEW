@@ -116,7 +116,7 @@ temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
 	-- prepare a sequence of rho frames
-	if torch.mod(seq_idx,#files)==0 then
+	if seq_idx%(#files)==0 then
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
