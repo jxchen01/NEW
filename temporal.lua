@@ -137,8 +137,6 @@ for i=1, opt.nIteration do
 		table.insert(targets,target_data[j]:cuda())
 	end
 
-	print(inputs)
-	print(targets)
 	-- build initial cell state 
 	--local init_state= data[data_index[seq_idx]].init
 	--for j=1, #HiddenSize do

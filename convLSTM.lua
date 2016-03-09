@@ -140,12 +140,13 @@ function ConvLSTM:updateOutput(input)
       else
          self.zeroTensor:resize(self.outputSize,input:size(2),input:size(3)):zero()
       end
-      print(self.zeroTensor:size())
    else
       -- previous output and memory of this module
       prevOutput = self.output
       prevCell   = self.cell
    end
+   print(prevOutput:size())
+   print(prevCell:size())
       
    -- output(t), cell(t) = lstm{input(t), output(t-1), cell(t-1)}
    local output, cell
