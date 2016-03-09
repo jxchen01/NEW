@@ -80,7 +80,7 @@ HiddenSize={128} -- {128,64}
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
 	--seq = nn.ConvLSTM(inputDepth,temporalSize, 3, 7, 9, 1)
-	local seq = nn.ConvLSTM(inputDepth,temporalSize, 3, opt.kernelSize, opt.kernelSizeMemory, 1)
+	local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	seq:remember('both')
 	seq:training()
 	inputDepth = temporalSize
@@ -155,6 +155,7 @@ for i=1, opt.nIteration do
 	end
 
 	local _, loss = optim.adam(feval, params, optim_config)
+	print('Iter '..i..', Loss = '..loss)
 
 	-- clean 
     collectgarbage()
