@@ -67,12 +67,12 @@ for i=1,10 do
 	local inputs = {}
 	local targets = {}
 	for j=1, opt.rho do
-		table.insert(inputs,torch.rand(64,16*XX-92,16*XX-92))
-		table.insert(targets, torch.Tensor((16*XX-92)*(16*XX-92),2):bernoulli(0.5))
+		table.insert(inputs,torch.rand(64,68,68))
+		table.insert(targets, torch.Tensor(68*68,2):bernoulli(0.5))
 	end
 
 	obj={input=inputs, target=targets,
-		 init=torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}
+		 init=torch.Tensor(2,68,68):bernoulli(0.5)}
 		 --torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
     table.insert(data,obj)
 end
@@ -102,6 +102,8 @@ temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 -- ship the model to gpu
 temporal_model:cuda()
+
+print(temporal_model)
 
 -- define criterion and ship to gpu
 criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
@@ -136,6 +138,9 @@ for i=1, opt.nIteration do
 		table.insert(inputs,input_data[j]:cuda())
 		table.insert(targets,target_data[j]:cuda())
 	end
+
+	print(inputs)
+	print(targets)
 
 	-- build initial cell state 
 	--local init_state= data[data_index[seq_idx]].init
