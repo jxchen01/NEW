@@ -137,10 +137,10 @@ for i=1, opt.nIteration do
 	end
 
 	-- build initial cell state 
-	init_state= data[data_index[seq_idx]].init
-	for j=1, #HiddenSize do
+	--local init_state= data[data_index[seq_idx]].init
+	--for j=1, #HiddenSize do
 		temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
-	end
+	--end
 
 	-- reset rnn memory
 	for j=1, #HiddenSize do
