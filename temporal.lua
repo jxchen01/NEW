@@ -106,12 +106,12 @@ end
 ---  Part3: Training 
 -------------------------------------------------------------------------------
 local data_index = torch.randperm(#files):long() -- feed the training sequences in a random order
-local seq_idx=1; 
+local seq_idx=1
 temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
 	-- prepare a sequence of rho frames
-	if seq_idx%(#files)==0 then
+	if torch.mod(seq_idx,#files)==0 then
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
@@ -131,9 +131,7 @@ for i=1, opt.nIteration do
 
 	-- define the evaluation closure 
 	local feval = function (x)
-    	if x ~= params then
-        	params:copy(x)
-    	end
+    	if x ~= params then params:copy(x) end
     	gradParams:zero()
 
     	------ forward -------
