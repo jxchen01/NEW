@@ -64,14 +64,14 @@ data = {}
 
 for i=1,10 do 
 	table.insert(files,'d')
-	local input = {}
-	local target = {}
+	local inputs = {}
+	local targets = {}
 	for j=1, opt.rho do
 		table.insert(input,torch.rand(64,16*XX-92,16*XX-92))
 		table.insert(target, torch.Tensor((16*XX-92)*(16*XX-92),2):bernoulli(0.5))
 	end
 
-	obj={input, target,
+	obj={input=inputs:copy(), target=targets:copy(),
 		 init={torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5),torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
     table.insert(data,obj)
 end
