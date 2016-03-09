@@ -71,7 +71,7 @@ for i=1,10 do
 		table.insert(targets, torch.Tensor((16*XX-92)*(16*XX-92),2):bernoulli(0.5))
 	end
 
-	obj={input=inputs:copy(), target=targets:copy(),
+	obj={input=inputs:clone(), target=targets:clone(),
 		 init={torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5),torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
     table.insert(data,obj)
 end
