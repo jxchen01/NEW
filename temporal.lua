@@ -72,8 +72,8 @@ for i=1,10 do
 	end
 
 	obj={input=inputs, target=targets,
-		 init={torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5),
-		 torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
+		 init=torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}
+		 --torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
     table.insert(data,obj)
 end
 
@@ -83,6 +83,7 @@ end
 
 -- build the model 
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
+print(inputDepth)
 HiddenSize={128} -- {128,64}
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
@@ -98,7 +99,7 @@ temporal_model:add(nn.SpatialConvolution(inputDepth, 2, 1, 1, 1, 1, 0, 0))
 temporal_model:add(nn.Transpose({1,2},{2,3}))
 temporal_model:add(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),2))
 temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
-
+print(temporal_model)
 -- ship the model to gpu
 temporal_model:cuda()
 
