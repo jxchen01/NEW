@@ -22,6 +22,9 @@ cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
 cmd:option('--nIteration',10,'the number of training iterations')
 cmd:text()
 opt = cmd:parse(arg or {})
+
+XX=10
+
 -- set GPU device
 cutorch.setDevice(opt.gpu)
 
