@@ -108,6 +108,7 @@ print(temporal_model)
 -- define criterion and ship to gpu
 criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
 
+--[[
 -- parameters initialization
 params, gradParams = temporal_model:getParameters()
 if opt.randNorm>0 then
@@ -117,12 +118,14 @@ end
 for j=1, #HiddenSize do
 	temporal_model.module.module.modules[j]:initBias(1,0)
 end
+
+--]]
 -------------------------------------------------------------------------------
 ---  Part3: Training 
 -------------------------------------------------------------------------------
 local data_index = torch.randperm(#files):long() -- feed the training sequences in a random order
 local seq_idx=1
-temporal_model:training()
+-- temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
 	-- prepare a sequence of rho frames
