@@ -130,7 +130,7 @@ for i=1, opt.nIteration do
 	end
 
 	-- define the evaluation closure 
-	function feval(x)
+	local feval = function (x)
     	if x ~= params then
         	params:copy(x)
     	end
