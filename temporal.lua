@@ -19,13 +19,14 @@ cmd:option('--RAM',false,'false means load all images to RAM')
 cmd:option('--clip',5,'max allowed gradient norm in BPTT')
 cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
+cmd:option('--nIteration',10,'the number of training iterations')
 -- set GPU device
 cutorch.setDevice(opt.gpu)
 
 -------------------------------------------------------------------------------
 ---  Part1: Data Loading 
 -------------------------------------------------------------------------------
-
+--[[
 -- load the result from encoder 
 files = {}
 for file in paths.files(opt.featureMapDir) do
@@ -39,16 +40,29 @@ if #files == 0 then
 end
 table.sort(files, function (a,b) return a < b end)
 
-fm = {}  -- "fm" should be a table of tensors of size k x W x H 
+data = {}  -- "data" should be a table of data structures with field ('input','target','init')  
 if not opt.RAM then
 	-- load all data
    	for i,file in ipairs(files) do
       	-- load each image
-    	table.insert(fm, torch.load(file))
+    	table.insert(data, torch.load(file))
    	end
 else
 	-- load one data to determine the size of data, which is necessary to define the model
-	table.insert(fm, torch.load(files[1])) 
+	table.insert(data, torch.load(files[1])) 
+end
+--]]
+
+-- Test with randomly generated data 
+files = {}
+data = {}
+
+for i=1,10 do 
+	table.insert(files,'d')
+	obj={input=torch.rand(opt.rho,64,16*XX-92,16*XX-92), 
+		 target= torch.Tensor(opt.rho,(16*XX-92)*(16*XX-92),2):bernoulli(0.5),
+		 init={torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5),torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
+    table.insert{data,obj}
 end
 
 -------------------------------------------------------------------------------
@@ -56,7 +70,7 @@ end
 -------------------------------------------------------------------------------
 
 -- build the model 
-inputDepth = fm[1].size(1) -- the number of features (fm: feature map)
+inputDepth = data[1].input:size(2) -- the number of features (dimension: {seq, featre, w, h})
 HiddenSize={128} -- {128,64}
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
@@ -70,7 +84,7 @@ end
 
 temporal_model:add(nn.SpatialConvolution(inputDepth, 2, 1, 1, 1, 1, 0, 0))
 temporal_model:add(nn.Transpose({1,2},{2,3}))
-temporal_model:add(nn.Reshape(fm[1].size(2)*fm[1].size(3),2))
+temporal_model:add(nn.Reshape(data[1].input:size(2)*data[1].input:size(2),2))
 temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 -- ship the model to gpu
