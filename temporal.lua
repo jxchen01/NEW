@@ -83,8 +83,8 @@ end
 
 -- build the model 
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
-print(inputDepth)
-HiddenSize={128} -- {128,64}
+
+HiddenSize={64} -- {128,64}
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
 	--seq = nn.ConvLSTM(inputDepth,temporalSize, 3, 7, 9, 1)
@@ -99,7 +99,7 @@ temporal_model:add(nn.SpatialConvolution(inputDepth, 2, 1, 1, 1, 1, 0, 0))
 temporal_model:add(nn.Transpose({1,2},{2,3}))
 temporal_model:add(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),2))
 temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
-print(temporal_model)
+
 -- ship the model to gpu
 temporal_model:cuda()
 
