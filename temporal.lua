@@ -139,7 +139,7 @@ for i=1, opt.nIteration do
 	-- build initial cell state 
 	--local init_state= data[data_index[seq_idx]].init
 	--for j=1, #HiddenSize do
-		temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
+	--	temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
 	--end
 
 	-- reset rnn memory
