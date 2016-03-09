@@ -144,7 +144,7 @@ for i=1, opt.nIteration do
 		local gradOutputs = criterion:backward(outputs,targets)
 		local gradInputs = temporal_model:backward(inputs, gradOutputs)
 
-		if(opt.clip>0)
+		if opt.clip>0 then
 			gradParams:clamp(-opt.clip, opt.clip)
 		end
 
