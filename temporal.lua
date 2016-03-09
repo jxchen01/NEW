@@ -103,14 +103,14 @@ temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 -- ship the model to gpu
 temporal_model:cuda()
 
-print(temporal_model)
 
 -- define criterion and ship to gpu
 criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
 
---[[
+
 -- parameters initialization
 params, gradParams = temporal_model:getParameters()
+--[[
 if opt.randNorm>0 then
     params:uniform(-0.08, 0.08) -- small uniform numbers
 end
