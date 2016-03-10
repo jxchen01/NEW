@@ -21,6 +21,7 @@ cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution
 cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/data/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',10,'the number of training iterations')
+cmd:option('--HiddenSize',{128,64},'size of hidden layers')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -72,9 +73,12 @@ for i=1,10 do
 		table.insert(targets, torch.Tensor(68*68,1):random(1,2))
 	end
 
-	obj={input=inputs, target=targets,
-		 init=torch.Tensor(2,68,68):random(1,2)}
-		 --torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
+	local inits = {}
+	for j=1, #opt.HiddenSize do
+		table.insert(inits, torch.Tensor(opt.HiddenSize[j],68,68):random(1,2))
+	end
+
+	obj={input=inputs, target=targets,init=inits}
     table.insert(data,obj)
 end
 
@@ -84,9 +88,8 @@ end
 
 -- build the model 
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
-HiddenSize={128} -- {128,64}
 local temporal_model = nn.Sequential()
-for i, temporalSize in ipairs(HiddenSize) do
+for i, temporalSize in ipairs(opt.HiddenSize) do
 	-- local seq = nn.ConvLSTM(64, 64, 3, 7, 9, 1)
 	local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	seq:remember('both')
@@ -113,7 +116,7 @@ if opt.randNorm>0 then
 end
 
 -- initialize the LSTM forget gates with slightly higher biases to encourage remembering in the beginning
-for j=1, #HiddenSize do
+for j=1, #opt.HiddenSize do
 	temporal_model.module.module.modules[j]:initBias(1,0)
 end
 
@@ -141,14 +144,13 @@ for i=1, opt.nIteration do
 	end
 
     -- build initial cell state 
-	-- local init_state= data[data_index[seq_idx]].init
-	-- init_state = init_state:cuda()
-	-- for j=1, #HiddenSize do
-	-- 	temporal_model.module.module.modules[j].userPrevCell = init_state  -- use the same cell status for every layer
-	-- end
+	local init_state= data[data_index[seq_idx]].init
+	for j=1, #opt.HiddenSize do
+	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j].cuda()
+	end
 
 	-- reset rnn memory
-	for j=1, #HiddenSize do
+	for j=1, #opt.HiddenSize do
 	  temporal_model.module.module.modules[j]:forget()
 	end
 
