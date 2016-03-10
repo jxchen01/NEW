@@ -140,12 +140,12 @@ for i=1, opt.nIteration do
 		table.insert(targets,target_data[j]:cuda())
 	end
 
-	-- build initial cell state 
-	local init_state= data[data_index[seq_idx]].init
-	init_state = init_state:cuda()
-	for j=1, #HiddenSize do
-		temporal_model.module.module.modules[j].userPrevCell = init_state  -- use the same cell status for every layer
-	end
+    -- build initial cell state 
+	-- local init_state= data[data_index[seq_idx]].init
+	-- init_state = init_state:cuda()
+	-- for j=1, #HiddenSize do
+	-- 	temporal_model.module.module.modules[j].userPrevCell = init_state  -- use the same cell status for every layer
+	-- end
 
 	-- reset rnn memory
 	for j=1, #HiddenSize do
