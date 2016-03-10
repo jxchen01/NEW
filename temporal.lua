@@ -68,7 +68,7 @@ for i=1,10 do
 	local targets = {}
 	for j=1, opt.rho do
 		table.insert(inputs,torch.rand(64,68,68))
-		table.insert(targets, torch.Tensor(68*68,2):bernoulli(0.5))
+		table.insert(targets, torch.Tensor(68*68,1):random(1,2))
 	end
 
 	obj={input=inputs, target=targets,
