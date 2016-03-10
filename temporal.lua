@@ -110,7 +110,6 @@ criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
 
 -- parameters initialization
 params, gradParams = temporal_model:getParameters()
---[[
 if opt.randNorm>0 then
     params:uniform(-0.08, 0.08) -- small uniform numbers
 end
@@ -119,7 +118,6 @@ for j=1, #HiddenSize do
 	temporal_model.module.module.modules[j]:initBias(1,0)
 end
 
---]]
 -------------------------------------------------------------------------------
 ---  Part3: Training 
 -------------------------------------------------------------------------------
@@ -127,7 +125,7 @@ local data_index = torch.randperm(#files):long() -- feed the training sequences 
 local seq_idx=1
 -- temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
-for i=1, opt.nIteration do
+--for i=1, opt.nIteration do
 	-- prepare a sequence of rho frames
 	if seq_idx%(#files)==0 then
 		data_index = torch.randperm(#files):long()
@@ -141,9 +139,6 @@ for i=1, opt.nIteration do
 		table.insert(inputs,input_data[j]:cuda())
 		table.insert(targets,target_data[j]:cuda())
 	end
-
-	print(inputs)
-	print(targets)
 
 	-- build initial cell state 
 	--local init_state= data[data_index[seq_idx]].init
@@ -177,6 +172,7 @@ for i=1, opt.nIteration do
 	end
 
 	local _, loss = optim.adam(feval, params, optim_config)
+--[[
 	print('Iter '..i..', Loss = '..loss)
 
 	-- clean 
@@ -188,4 +184,5 @@ for i=1, opt.nIteration do
    	end
 
     seq_idx = seq_idx + 1
-end
+--]]
+-- end
