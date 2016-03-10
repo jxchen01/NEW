@@ -21,7 +21,7 @@ cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution
 cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/data/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',10,'the number of training iterations')
-cmd:option('--HiddenSize',{128,64},'size of hidden layers')
+cmd:option('--HiddenSize',{64,64},'size of hidden layers')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -104,8 +104,6 @@ temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 -- ship the model to gpu
 temporal_model:cuda()
 
-print(temporal_model)
-
 -- define criterion and ship to gpu
 criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
 
@@ -151,8 +149,6 @@ for i=1, opt.nIteration do
 		table.insert(init_state, torch.Tensor(opt.HiddenSize[j],68,68):random(1,2))
 	end
 	for j=1, #opt.HiddenSize do
-		print(temporal_model.module.module.modules[j])
-		print(init_state[j]:size())
 	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
 	end
 
