@@ -19,6 +19,7 @@ cmd:option('--RAM',false,'false means load all images to RAM')
 cmd:option('--clip',5,'max allowed gradient norm in BPTT')
 cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
+cmd:option('--CheckPointDir','/home/jchen16/NEW/data/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',10,'the number of training iterations')
 cmd:text()
 opt = cmd:parse(arg or {})
@@ -178,7 +179,7 @@ for i=1, opt.nIteration do
 	-- clean 
     collectgarbage()
 
-    if opt.checkpoint>0 and i%opt.checkpoint then
+    if opt.checkpoint>0 and i%opt.checkpoint==0 then
     	filename=string.format('%s/rnn_%f.bin',opt.CheckPointDir,i);
       	torch.save(filename,temporal_model);
    	end
