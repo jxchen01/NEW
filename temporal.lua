@@ -90,7 +90,6 @@ end
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(opt.HiddenSize) do
-	-- local seq = nn.ConvLSTM(64, 64, 3, 7, 9, 1)
 	local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	seq:remember('both')
 	seq:training()
@@ -146,11 +145,15 @@ for i=1, opt.nIteration do
 	end
 
     -- build initial cell state 
-	local init_state= data[data_index[seq_idx]].init
+	--local init_state= data[data_index[seq_idx]].init
+	init_state={}
+	for j=1, #opt.HiddenSize do
+		table.insert(init_state, torch.Tensor(opt.HiddenSize[j],68,68):random(1,2))
+	end
 	for j=1, #opt.HiddenSize do
 		print(temporal_model.module.module.modules[j])
 		print(init_state[j]:size())
-	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j]
+	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
 	end
 
 	-- reset rnn memory
