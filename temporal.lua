@@ -130,8 +130,8 @@ for i=1, opt.nIteration do
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
-	input_data = data[data_index[seq_idx].input
-	target_data = data[data_index[seq_idx].target
+	input_data = data[data_index[seq_idx]].input
+	target_data = data[data_index[seq_idx]].target
 	local inputs={}
 	local targets={}
 	for j=1,opt.rho do 
