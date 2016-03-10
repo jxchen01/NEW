@@ -72,7 +72,7 @@ for i=1,10 do
 	end
 
 	obj={input=inputs, target=targets,
-		 init=torch.Tensor(2,68,68):bernoulli(0.5)}
+		 init=torch.Tensor(2,68,68):random(1,2)}
 		 --torch.Tensor(2,16*XX-92,16*XX-92):bernoulli(0.5)}}
     table.insert(data,obj)
 end
