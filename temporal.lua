@@ -156,6 +156,8 @@ table.insert(targets,target)
 table.insert(targets,target)
 table.insert(targets,target)
 
+local outputs=temporal_model:forward(inputs)
+
 	-- build initial cell state 
 	--local init_state= data[data_index[seq_idx]].init
 	--for j=1, #HiddenSize do
@@ -166,7 +168,7 @@ table.insert(targets,target)
 	--for j=1, #HiddenSize do
 	--	temporal_model.module.module.modules[j]:forget()
 	--end
-
+--[[
 	-- define the evaluation closure 
 	local feval = function (x)
     	if x ~= params then params:copy(x) end
@@ -188,6 +190,7 @@ table.insert(targets,target)
 	end
 
 	local _, loss = optim.adam(feval, params, optim_config)
+--]]
 --[[
 	print('Iter '..i..', Loss = '..loss)
 
