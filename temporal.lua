@@ -150,7 +150,7 @@ for i=1, opt.nIteration do
 	for j=1, #opt.HiddenSize do
 		print(temporal_model.module.module.modules[j])
 		print(init_state[j]:size())
-	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j].cuda()
+	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j]
 	end
 
 	-- reset rnn memory
