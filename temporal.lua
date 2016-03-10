@@ -12,7 +12,7 @@ cmd:option('--featureMapDir', '/home/jchen16/NEW/data/X10/fm/', 'the directory t
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
 cmd:option('--kernalSize',7,'the kernal size of convolution on input feature map')
-cmd:option('--kernalSizeMemory',10,'the kernal size of convolution on the cell state')
+cmd:option('--kernalSizeMemory',15,'the kernal size of convolution on the cell state')
 cmd:option('--learningRate',0.05,'initial learning rate')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'false means load all images to RAM')
@@ -83,19 +83,16 @@ end
 
 -- build the model 
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
-HiddenSize={64} -- {128,64}
+HiddenSize={128} -- {128,64}
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
-	--seq = nn.ConvLSTM(inputDepth,temporalSize, 3, 7, 9, 1)
-	local seq = nn.ConvLSTM(64, 64, 3, 7, 9, 1)
-	--local seq = nn.ConvLSTM(64,64, 3, opt.kernalSize, opt.kernalSizeMemory, 1)
-	--local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
+	-- local seq = nn.ConvLSTM(64, 64, 3, 7, 9, 1)
+	local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	seq:remember('both')
-	seq:training()
+	--seq:training()
 	inputDepth = temporalSize
 	temporal_model:add(seq)
 end
-
 temporal_model:add(nn.SpatialConvolution(inputDepth, 2, 1, 1, 1, 1, 0, 0))
 temporal_model:add(nn.Transpose({1,2},{2,3}))
 temporal_model:add(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),2))
@@ -103,7 +100,6 @@ temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 -- ship the model to gpu
 temporal_model:cuda()
-
 
 -- define criterion and ship to gpu
 criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
@@ -114,6 +110,7 @@ params, gradParams = temporal_model:getParameters()
 if opt.randNorm>0 then
     params:uniform(-0.08, 0.08) -- small uniform numbers
 end
+
 -- initialize the LSTM forget gates with slightly higher biases to encourage remembering in the beginning
 for j=1, #HiddenSize do
 	temporal_model.module.module.modules[j]:initBias(1,0)
@@ -124,11 +121,10 @@ end
 -------------------------------------------------------------------------------
 local data_index = torch.randperm(#files):long() -- feed the training sequences in a random order
 local seq_idx=1
--- temporal_model:training()
+temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
---for i=1, opt.nIteration do
-
-    --[[
+for i=1, opt.nIteration do
+    
 	-- prepare a sequence of rho frames
 	if seq_idx%(#files)==0 then
 		data_index = torch.randperm(#files):long()
@@ -142,22 +138,6 @@ local optim_config = {learningRate = opt.learning_rate}
 		table.insert(inputs,input_data[j]:cuda())
 		table.insert(targets,target_data[j]:cuda())
 	end
-	--]]
-
-input = torch.Tensor(64,68,68):cuda()
-
-inputs = {}
-table.insert(inputs,input)
-table.insert(inputs,input)
-table.insert(inputs,input)
-
-target = torch.Tensor(68*68,2):bernoulli(0.5)
-targets = {}
-table.insert(targets,target)
-table.insert(targets,target)
-table.insert(targets,target)
-
-local outputs=temporal_model:forward(inputs)
 
 	-- build initial cell state 
 	--local init_state= data[data_index[seq_idx]].init
@@ -166,10 +146,10 @@ local outputs=temporal_model:forward(inputs)
 	--end
 
 	-- reset rnn memory
-	--for j=1, #HiddenSize do
-	--	temporal_model.module.module.modules[j]:forget()
-	--end
---[[
+	for j=1, #HiddenSize do
+	  temporal_model.module.module.modules[j]:forget()
+	end
+
 	-- define the evaluation closure 
 	local feval = function (x)
     	if x ~= params then params:copy(x) end
@@ -191,8 +171,8 @@ local outputs=temporal_model:forward(inputs)
 	end
 
 	local _, loss = optim.adam(feval, params, optim_config)
---]]
---[[
+
+
 	print('Iter '..i..', Loss = '..loss)
 
 	-- clean 
@@ -204,5 +184,5 @@ local outputs=temporal_model:forward(inputs)
    	end
 
     seq_idx = seq_idx + 1
---]]
--- end
+
+end
