@@ -126,19 +126,35 @@ local seq_idx=1
 -- temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
 --for i=1, opt.nIteration do
+
+    --[[
 	-- prepare a sequence of rho frames
 	if seq_idx%(#files)==0 then
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
-	input_data = data[data_index[seq_idx]].input
-	target_data = data[data_index[seq_idx]].target
+	input_data = data[data_index[seq_idx].input
+	target_data = data[data_index[seq_idx].target
 	local inputs={}
 	local targets={}
 	for j=1,opt.rho do 
 		table.insert(inputs,input_data[j]:cuda())
 		table.insert(targets,target_data[j]:cuda())
 	end
+	--]]
+
+input = torch.Tensor(64,68,68):cuda()
+
+inputs = {}
+table.insert(inputs,input)
+table.insert(inputs,input)
+table.insert(inputs,input)
+
+target = torch.Tensor(68*68,2):bernoulli(0.5)
+targets = {}
+table.insert(targets,target)
+table.insert(targets,target)
+table.insert(targets,target)
 
 	-- build initial cell state 
 	--local init_state= data[data_index[seq_idx]].init
