@@ -93,7 +93,7 @@ for i, temporalSize in ipairs(opt.HiddenSize) do
 	-- local seq = nn.ConvLSTM(64, 64, 3, 7, 9, 1)
 	local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	seq:remember('both')
-	--seq:training()
+	seq:training()
 	inputDepth = temporalSize
 	temporal_model:add(seq)
 end
@@ -104,6 +104,8 @@ temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 -- ship the model to gpu
 temporal_model:cuda()
+
+print(temporal_model)
 
 -- define criterion and ship to gpu
 criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
@@ -125,7 +127,7 @@ end
 -------------------------------------------------------------------------------
 local data_index = torch.randperm(#files):long() -- feed the training sequences in a random order
 local seq_idx=1
-temporal_model:training()
+--temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
     
