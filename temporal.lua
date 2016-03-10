@@ -173,7 +173,7 @@ for i=1, opt.nIteration do
 	local _, loss = optim.adam(feval, params, optim_config)
 
 
-	print('Iter '..i..', Loss = '..loss)
+	print('Iter '..i..', Loss = '..loss[1])
 
 	-- clean 
     collectgarbage()
