@@ -84,7 +84,7 @@ end
 
 -- build the model 
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
-HiddenSize={128} -- {128,64}
+HiddenSize={128,64} -- {128,64}
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
 	-- local seq = nn.ConvLSTM(64, 64, 3, 7, 9, 1)
@@ -141,10 +141,11 @@ for i=1, opt.nIteration do
 	end
 
 	-- build initial cell state 
-	--local init_state= data[data_index[seq_idx]].init
-	--for j=1, #HiddenSize do
-	--	temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
-	--end
+	local init_state= data[data_index[seq_idx]].init
+	init_state = init_state:cuda()
+	for j=1, #HiddenSize do
+		temporal_model.module.module.modules[j].userPrevCell = init_state  -- use the same cell status for every layer
+	end
 
 	-- reset rnn memory
 	for j=1, #HiddenSize do
