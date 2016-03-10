@@ -84,7 +84,7 @@ end
 
 -- build the model 
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
-HiddenSize={128,64} -- {128,64}
+HiddenSize={128} -- {128,64}
 local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
 	-- local seq = nn.ConvLSTM(64, 64, 3, 7, 9, 1)
