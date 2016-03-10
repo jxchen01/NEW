@@ -88,7 +88,7 @@ local temporal_model = nn.Sequential()
 for i, temporalSize in ipairs(HiddenSize) do
 	--seq = nn.ConvLSTM(inputDepth,temporalSize, 3, 7, 9, 1)
 	--local seq = nn.ConvLSTM(64, 64, 3, 7, 7, 1)
-	local seq = nn.ConvLSTM(inputDepth,64, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
+	local seq = nn.ConvLSTM(64,64, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	--local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	seq:remember('both')
 	seq:training()
