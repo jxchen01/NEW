@@ -208,7 +208,7 @@ if opt.training then
             local target_table ={}
             local init_fm = targets[1]:sub(1,1,x1,x2,y1,y2)
 
-            for ti=2:#files do
+            for ti=2, #files do
                 table.insert(input_table, fm_table[ti]:sub(1,64,x1,x2,y1,y2))
                 table.insert(target_table, torch.reshape(targets[ti]:sub(1,1,x1,x2,y1,y2),dd*dd,1))
             end
