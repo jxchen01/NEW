@@ -22,7 +22,7 @@ cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/data/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',10,'the number of training iterations')
 cmd:option('--HiddenSize',{64,64},'size of hidden layers')
-cmd:option('--XX',15,'XX')
+cmd:option('--XX',10,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -145,10 +145,6 @@ for i=1, opt.nIteration do
 
     -- build initial cell state 
 	init_state= data[data_index[seq_idx]].init
-	--init_state={}
-	--for j=1, #opt.HiddenSize do
-	--	table.insert(init_state, torch.Tensor(opt.HiddenSize[j],(16*XX-92),(16*XX-92)):random(1,2))
-	--end
 	for j=1, #opt.HiddenSize do
 	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
 	end
