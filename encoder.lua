@@ -26,7 +26,7 @@ opt = cmd:parse(arg or {})
 XX=opt.XX
 
 -- 1. Get the list of files in the given directory
-if opt.training then
+if not opt.training then
 
     files = {}
     for file in paths.files(opt.imageDir) do
@@ -41,10 +41,6 @@ if opt.training then
 
     table.sort(files, function (a,b) return a < b end)
     numFrame = #files
-
-    if #files == 0 then
-        error('given directory does not contain any files of type: ' .. opt.ext)
-    end
 else
     files={}
     files_target = {}
@@ -54,13 +50,14 @@ else
             table.insert(files, paths.concat(opt.imageDir,file))
         end
     end
-    table.sort(files_target, function (a,b) return a < b end)
-    table.sort(files, function (a,b) return a < b end)
-    numFrame = #files_target
     
     if #files == 0 then
         error('given directory does not contain any files of type: ' .. opt.ext)
     end
+
+    table.sort(files_target, function (a,b) return a < b end)
+    table.sort(files, function (a,b) return a < b end)
+    numFrame = #files_target
 end
 
 
