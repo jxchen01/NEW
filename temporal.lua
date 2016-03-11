@@ -22,10 +22,11 @@ cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/data/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',10,'the number of training iterations')
 cmd:option('--HiddenSize',{64,64},'size of hidden layers')
+cmd:option('--XX',15,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
 
-XX=10
+XX=opt.XX
 
 -- set GPU device
 cutorch.setDevice(opt.gpu)
@@ -69,13 +70,13 @@ for i=1,10 do
 	local inputs = {}
 	local targets = {}
 	for j=1, opt.rho do
-		table.insert(inputs,torch.rand(64,68,68))
-		table.insert(targets, torch.Tensor(68*68,1):random(1,2))
+		table.insert(inputs,torch.rand(64,16*XX-92,16*XX-92))
+		table.insert(targets, torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2))
 	end
 
 	local inits = {}
 	for j=1, #opt.HiddenSize do
-		table.insert(inits, torch.Tensor(opt.HiddenSize[j],68,68):random(1,2))
+		table.insert(inits, torch.Tensor(opt.HiddenSize[j],(16*XX-92),(16*XX-92)):random(1,2))
 	end
 
 	obj={input=inputs, target=targets,init=inits}
@@ -143,11 +144,11 @@ for i=1, opt.nIteration do
 	end
 
     -- build initial cell state 
-	--local init_state= data[data_index[seq_idx]].init
-	init_state={}
-	for j=1, #opt.HiddenSize do
-		table.insert(init_state, torch.Tensor(opt.HiddenSize[j],68,68):random(1,2))
-	end
+	init_state= data[data_index[seq_idx]].init
+	--init_state={}
+	--for j=1, #opt.HiddenSize do
+	--	table.insert(init_state, torch.Tensor(opt.HiddenSize[j],(16*XX-92),(16*XX-92)):random(1,2))
+	--end
 	for j=1, #opt.HiddenSize do
 	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
 	end
