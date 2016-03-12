@@ -186,18 +186,22 @@ if opt.training then
 
     for xi=1,numX do
         local x1,x2,y1,y2
-        x1=1+(xi-1)*dd
+        
         if xi==numX then
             x2=xdim
+            x1=xdim-dd+1
         else
+            x1=1+(xi-1)*dd
             x2=xi*dd
         end
 
         for yi=1,numY do
-            y1=1+(yi-1)*dd
+            
             if yi==numY then
                 y2=ydim
-            else            
+                y1=ydim-dd+1
+            else      
+                y1=1+(yi-1)*dd      
                 y2=yi*dd
             end          
             
