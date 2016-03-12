@@ -182,6 +182,8 @@ if opt.training then
     local ydim = images[1]:size(3)
     local numX=math.ceil(xdim/dd);
     local numY=math.ceil(ydim/dd);
+    print(numX)
+    print(numY)
 
     local data_idx=0
 
@@ -205,6 +207,8 @@ if opt.training then
                 y1=1+(yi-1)*dd      
                 y2=yi*dd
             end          
+
+            print('processing '..xi..', '..yi)
             
             local input_table = {} 
             local target_table ={}
