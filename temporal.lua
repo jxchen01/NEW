@@ -14,6 +14,7 @@ cmd:option('--rho',3,'maximum length of the sequence for each training iteration
 cmd:option('--kernalSize',7,'the kernal size of convolution on input feature map')
 cmd:option('--kernalSizeMemory',9,'the kernal size of convolution on the cell state')
 cmd:option('--learningRate',0.05,'initial learning rate')
+cmd:option('--minLR',0.0005,'minimal learning rate')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'true means load all images to RAM')
 cmd:option('--clip',5,'max allowed gradient norm in BPTT')
@@ -134,9 +135,13 @@ local seq_idx=1
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
 
+	if optim_config.learningRate > opt.minLR then
+		optim_config.learningRate = optim_config.learningRate * 0.75
+	end
+
 	-- fetch one whole sequence 
 	if seq_idx%(#files)==0 then
-		if optim_config.learningRate>0.0005 then
+		if optim_config.learningRate > opt.minLR then
 			optim_config.learningRate = optim_config.learningRate * 0.75
 		end
 		data_index = torch.randperm(#files):long()
