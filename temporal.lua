@@ -60,6 +60,7 @@ else
 	table.insert(data, torch.load(files[1])) 
 end
 
+print('finish loading data')
 
 --[[
 -- Test with randomly generated data 
@@ -122,6 +123,8 @@ for j=1, #opt.HiddenSize do
 	temporal_model.module.module.modules[j]:initBias(1,0)
 end
 
+print('finish building the model')
+
 -------------------------------------------------------------------------------
 ---  Part3: Training 
 -------------------------------------------------------------------------------
@@ -131,6 +134,8 @@ local seq_idx=1
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
     
+    print(i)
+
 	-- fetch one whole sequence 
 	if seq_idx%(#files)==0 then
 		data_index = torch.randperm(#files):long()
