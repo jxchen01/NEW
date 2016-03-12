@@ -132,9 +132,10 @@ print('finish building the model')
 local data_index = torch.randperm(#files):long() -- feed the training sequences in a random order
 local seq_idx=1
 --temporal_model:training()
-local optim_config = {learningRate = opt.learning_rate}
+local optim_config = {learningRate = opt.learningRate}
 for i=1, opt.nIteration do
 
+	print(optim_config.learningRate)
 	if optim_config.learningRate > opt.minLR then
 		optim_config.learningRate = optim_config.learningRate * 0.75
 	end
