@@ -8,7 +8,7 @@ require 'cunn'
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
-cmd:option('--dataDir', '/home/jchen16/NEW/data/X10/fm/', 'the directory to load')
+cmd:option('--dataDir', '/home/jchen16/NEW/data/temporal/encoder', 'the directory to load')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
 cmd:option('--kernalSize',7,'the kernal size of convolution on input feature map')
