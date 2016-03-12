@@ -131,57 +131,60 @@ local seq_idx=1
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
     
-	-- prepare a sequence of rho frames
+	-- fetch one whole sequence 
 	if seq_idx%(#files)==0 then
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
-	input_data = data[data_index[seq_idx]].input
-	target_data = data[data_index[seq_idx]].target
-	local inputs={}
-	local targets={}
-	for j=1,opt.rho do 
-		table.insert(inputs,input_data[j]:cuda())
-		table.insert(targets,target_data[j]:cuda())
-	end
+	input_sequence = data[data_index[seq_idx]].input
+	target_sequence = data[data_index[seq_idx]].target
+	init_sequence = data[data_index[seq_idx]].init
 
-    -- build initial cell state 
-	init_state= data[data_index[seq_idx]].init
-	for j=1, #opt.HiddenSize do
-	 	temporal_model.module.module.modules[j].userPrevCell = init_state[j]:cuda()
-	end
-
-	-- reset rnn memory
-	for j=1, #opt.HiddenSize do
-	  temporal_model.module.module.modules[j]:forget()
-	end
-
-	-- define the evaluation closure 
-	local feval = function (x)
-    	if x ~= params then params:copy(x) end
-    	gradParams:zero()
-
-    	------ forward -------
-		local outputs=temporal_model:forward(inputs)
-		local err = criterion:forward(outputs,targets)
-
-		------ backward ------
-		local gradOutputs = criterion:backward(outputs,targets)
-		local gradInputs = temporal_model:backward(inputs, gradOutputs)
-
-		if opt.clip>0 then
-			gradParams:clamp(-opt.clip, opt.clip)
+	-- prepare a sequence of rho frames
+    for offset = 0, #input_sequence-opt.rho do
+    	local inputs={}
+		local targets={}
+		for j=1,opt.rho do 
+			table.insert(inputs,input_sequence[j+offest]:cuda())
+			table.insert(targets,target_sequence[j+offset]:cuda())
 		end
 
-		return err, gradParams
-	end
+		-- reset rnn memory
+		for j=1, #opt.HiddenSize do
+	  		temporal_model.module.module.modules[j]:forget()
+		end
 
-	local _, loss = optim.adam(feval, params, optim_config)
+		-- build initial cell state 
+		for j=1, #opt.HiddenSize do
+			init_cell_state = torch.Tensor(opt.HiddenSize[j],(16*XX-92),(16*XX-92)):copy(init_sequence[offset+1]:expand(opt.HiddenSize[j],(16*XX-92),(16*XX-92)))
+	 		temporal_model.module.module.modules[j].userPrevCell = init_cell_state:cuda()
+		end
 
+		-- define the evaluation closure 
+		local feval = function (x)
+    		if x ~= params then params:copy(x) end
+    		gradParams:zero()
 
-	print('Iter '..i..', Loss = '..loss[1])
+    		------ forward -------
+			local outputs=temporal_model:forward(inputs)
+			local err = criterion:forward(outputs,targets)
 
-	-- clean 
+			------ backward ------
+			local gradOutputs = criterion:backward(outputs,targets)
+			local gradInputs = temporal_model:backward(inputs, gradOutputs)
+
+			if opt.clip>0 then
+				gradParams:clamp(-opt.clip, opt.clip)
+			end
+
+			return err, gradParams
+		end
+
+		local _, loss = optim.adam(feval, params, optim_config)
+		print('Iter '..i..'('..offset..'), Loss = '..loss[1])
+    end
+
+    -- clean 
     collectgarbage()
 
     if opt.checkpoint>0 and i%opt.checkpoint==0 then
@@ -190,5 +193,5 @@ for i=1, opt.nIteration do
    	end
 
     seq_idx = seq_idx + 1
-
 end
+
