@@ -136,9 +136,17 @@ for i=1, opt.nIteration do
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
-	input_sequence = data[data_index[seq_idx]].input
-	target_sequence = data[data_index[seq_idx]].target
-	init_sequence = data[data_index[seq_idx]].init
+
+	if not opt.RAW then
+		a=torch.load(files[data_index[seq_idx]])
+		input_sequence = a.input
+		target_sequence = a.target
+		init_sequence = a.init
+	else
+		input_sequence = data[data_index[seq_idx]].input
+		target_sequence = data[data_index[seq_idx]].target
+		init_sequence = data[data_index[seq_idx]].init
+	end
 
 	-- prepare a sequence of rho frames
     for offset = 0, #input_sequence-opt.rho do
