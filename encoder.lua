@@ -20,6 +20,7 @@ cmd:option('--ext','.png','only load a specific type of images')
 cmd:option('--training',false,'training mode or not')
 cmd:option('--RAM',false,'load to RAM or not')
 cmd:option('--XX',10,'the key parameter to determine the size of image')
+cmd:option('--rho',3,'the length of sequence in RNN')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -207,7 +208,10 @@ if opt.training then
             
             local input_table = {} 
             local target_table ={}
-            local init_fm = targets[1]:sub(1,1,x1,x2,y1,y2)
+            local init_fm = {}
+            for ti=1, #files-opt.rho do
+                table.insert(init_fm, targets[ti]:sub(1,1,x1,x2,y1,y2))
+            end
 
             for ti=2, #files do
                 table.insert(input_table, fm_table[ti]:sub(1,64,x1,x2,y1,y2))
