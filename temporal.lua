@@ -8,14 +8,14 @@ require 'cunn'
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
-cmd:option('--featureMapDir', '/home/jchen16/NEW/data/X10/fm/', 'the directory to load')
+cmd:option('--dataDir', '/home/jchen16/NEW/data/X10/fm/', 'the directory to load')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
 cmd:option('--kernalSize',7,'the kernal size of convolution on input feature map')
 cmd:option('--kernalSizeMemory',15,'the kernal size of convolution on the cell state')
 cmd:option('--learningRate',0.05,'initial learning rate')
 cmd:option('--gpu',1,'gpu device to use')
-cmd:option('--RAM',false,'false means load all images to RAM')
+cmd:option('--RAM',false,'true means load all images to RAM')
 cmd:option('--clip',5,'max allowed gradient norm in BPTT')
 cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
@@ -34,12 +34,12 @@ cutorch.setDevice(opt.gpu)
 -------------------------------------------------------------------------------
 ---  Part1: Data Loading 
 -------------------------------------------------------------------------------
---[[
+
 -- load the result from encoder 
 files = {}
-for file in paths.files(opt.featureMapDir) do
+for file in paths.files(opt.dataDir) do
    if file:find(opt.ext .. '$') then
-      table.insert(files, paths.concat(opt.featureMapDir,file))
+      table.insert(files, paths.concat(opt.dataDir,file))
    end
 end
 
@@ -49,7 +49,7 @@ end
 table.sort(files, function (a,b) return a < b end)
 
 data = {}  -- "data" should be a table of data structures with field ('input','target','init')  
-if not opt.RAM then
+if opt.RAM then
 	-- load all data
    	for i,file in ipairs(files) do
       	-- load each image
@@ -59,8 +59,9 @@ else
 	-- load one data to determine the size of data, which is necessary to define the model
 	table.insert(data, torch.load(files[1])) 
 end
---]]
 
+
+--[[
 -- Test with randomly generated data 
 files = {}
 data = {}
@@ -82,6 +83,7 @@ for i=1,10 do
 	obj={input=inputs, target=targets,init=inits}
     table.insert(data,obj)
 end
+--]]
 
 -------------------------------------------------------------------------------
 ---  Part2: Model and Criterion
