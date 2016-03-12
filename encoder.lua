@@ -5,8 +5,6 @@ require 'cutorch'
 require 'cunn'
 require 'image'
 
-cutorch.setDevice(2)
-
 
 cmd = torch.CmdLine()
 cmd:text()
@@ -21,10 +19,12 @@ cmd:option('--training',false,'training mode or not')
 cmd:option('--RAM',false,'load to RAM or not')
 cmd:option('--XX',10,'the key parameter to determine the size of image')
 cmd:option('--rho',3,'the length of sequence in RNN')
+cmd:option('--gpu',1,'the gpu to use')
 cmd:text()
 opt = cmd:parse(arg or {})
 
 XX=opt.XX
+cutorch.setDevice(opt.gpu)
 
 -- 1. Get the list of files in the given directory
 if not opt.training then
