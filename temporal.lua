@@ -133,11 +133,12 @@ local seq_idx=1
 --temporal_model:training()
 local optim_config = {learningRate = opt.learning_rate}
 for i=1, opt.nIteration do
-    
-    print(i)
 
 	-- fetch one whole sequence 
 	if seq_idx%(#files)==0 then
+		if optim_cofig.learningRate>0.0005 then
+			optim_cofig.learningRate = optim_cofig.learningRate * 0.75
+		end
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
 	end
