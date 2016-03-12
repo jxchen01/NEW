@@ -158,7 +158,7 @@ for i=1, opt.nIteration do
     	local inputs={}
 		local targets={}
 		for j=1,opt.rho do 
-			table.insert(inputs,input_sequence[j+offest]:cuda())
+			table.insert(inputs,input_sequence[j+offset]:cuda())
 			table.insert(targets,target_sequence[j+offset]:cuda())
 		end
 
