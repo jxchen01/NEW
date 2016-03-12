@@ -134,12 +134,7 @@ local seq_idx=1
 --temporal_model:training()
 local optim_config = {learningRate = opt.learningRate}
 for i=1, opt.nIteration do
-
-	print(optim_config.learningRate)
-	if optim_config.learningRate > opt.minLR then
-		optim_config.learningRate = optim_config.learningRate * 0.75
-	end
-
+	
 	-- fetch one whole sequence 
 	if seq_idx%(#files)==0 then
 		if optim_config.learningRate > opt.minLR then
