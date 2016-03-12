@@ -227,6 +227,8 @@ if opt.training then
             local str= string.format('%s/train_%d.t7',opt.outputDir,data_idx);
             torch.save(str,obj)
         end
+
+        collectgarbage()
     end
 
 end
