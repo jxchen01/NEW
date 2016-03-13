@@ -2,6 +2,8 @@ require 'nn'
 require 'rnn'
 require 'ConvLSTM'
 require 'optim'
+require 'cunn'
+require 'cutorch'
 
 cmd = torch.CmdLine()
 cmd:text()
@@ -29,8 +31,6 @@ XX=opt.XX
 
 -- set GPU device
 if opt.gpu>0 then
-	require 'cutorch'
-	require 'cunn'
 	cutorch.setDevice(opt.gpu)
 end
 
