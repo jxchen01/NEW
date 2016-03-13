@@ -198,7 +198,7 @@ if opt.training then
             x2=xi*dd
         end
 
-        for yi=1,numY do
+        for yi=8,numY do
             
             if yi==numY then
                 y2=ydim
