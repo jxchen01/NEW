@@ -164,9 +164,7 @@ for i=1, opt.nIteration do
 		end
 
 		-- reset rnn memory
-		for j=1, #opt.HiddenSize do
-	  		temporal_model.module.module.modules[j]:forget()
-		end
+	  	temporal_model.modules[1].backwardModule:forget()
 
 		-- define the evaluation closure 
 		local feval = function (x)
