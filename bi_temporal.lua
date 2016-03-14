@@ -15,7 +15,7 @@ cmd:option('--kernalSize',7,'the kernal size of convolution on input feature map
 cmd:option('--kernalSizeMemory',9,'the kernal size of convolution on the cell state')
 cmd:option('--learningRate',0.05,'initial learning rate')
 cmd:option('--minLR',0.0005,'minimal learning rate')
-cmd:option('--gpu',-1,'gpu device to use')
+cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'true means load all images to RAM')
 cmd:option('--clip',5,'max allowed gradient norm in BPTT')
 cmd:option('--randNorm', 0.08, 'initialize parameters using uniform distribution between -uniform and uniform.')
@@ -30,9 +30,7 @@ opt = cmd:parse(arg or {})
 XX=opt.XX
 
 -- set GPU device
-if opt.gpu>0 then
-	cutorch.setDevice(opt.gpu)
-end
+cutorch.setDevice(opt.gpu)
 
 -------------------------------------------------------------------------------
 ---  Part1: Data Loading 
@@ -110,16 +108,10 @@ temporal_model:add(nn.Sequencer(nn.Reshape(data[1].input[1]:size(2)*data[1].inpu
 print(temporal_model)
 
 -- ship the model to gpu
-if opt.gpu>0 then
-	temporal_model:cuda()
-end
+temporal_model:cuda()
 
 -- define criterion and ship to gpu
-criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion())
-if opt.gpu>0 then
-	criterion:cuda()
-end
-
+criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
 
 -- parameters initialization
 params, gradParams = temporal_model:getParameters()
@@ -166,13 +158,8 @@ for i=1, opt.nIteration do
     	local inputs={}
 		local targets={}
 		for j=1,opt.rho do 
-			if opt.gpu>0 then
-				table.insert(inputs,input_sequence[j+offset]:cuda())
-				table.insert(targets,target_sequence[j+offset]:cuda())
-			else
-				table.insert(inputs,input_sequence[j+offset])
-				table.insert(targets,target_sequence[j+offset])
-			end
+			table.insert(inputs,input_sequence[j+offset]:cuda())
+			table.insert(targets,target_sequence[j+offset]:cuda())
 		end
 
 		-- reset rnn memory
