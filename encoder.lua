@@ -61,7 +61,6 @@ else
     numFrame = #files_target
 end
 
-
 -- 2. Load all the files into RAM
 if opt.RAM then
     -- "images" is a table of tensors of size 1 x L x L 
@@ -73,7 +72,13 @@ if opt.RAM then
     for i,file in ipairs(files_target) do
         table.insert(targets,image.load(file,1,'byte'))
     end
+else
+    table.insert(images, image.load(files[1]))
+    table.insert(targets,image.load(files_target[1],1,'byte'))
 end
+
+xdim = images[1]:size(2)
+ydim = images[1]:size(3)
 
 -- 3. Load Model
 unet=torch.load(opt.modelPath)
@@ -101,8 +106,8 @@ for i=1, #files do
 	local tiles = {} 
     local dd=16*XX-92
     local windowSize = 16*XX+92
-    local numX=math.ceil(raw:size(2)/dd);
-    local numY=math.ceil(raw:size(3)/dd);
+    local numX=math.ceil(xdim/dd);
+    local numY=math.ceil(ydim/dd);
 
     for xi=1,numX do
     	local x0, y0
@@ -137,21 +142,21 @@ for i=1, #files do
 
     
     -- assemble back to the whole image
-    local output_image = torch.Tensor(raw:size(2),raw:size(3))
-    local output_fm=torch.Tensor(64,raw:size(2),raw:size(3))
+    local output_image = torch.Tensor(xdim,ydim)
+    local output_fm=torch.Tensor(64,xdim,ydim)
     local tile_idx=0
     for xi=1,numX do
     	local x1,x2,y1,y2
     	x1=1+(xi-1)*dd
     	if xi==numX then
-    		x2=images[i]:size(2)
+    		x2=xdim
     	else
     		x2=xi*dd
     	end
     	for yi=1,numY do
     		y1=1+(yi-1)*dd
     		if yi==numY then
-    			y2=images[i]:size(3)
+    			y2=ydim
     		else			
     			y2=yi*dd
     		end
@@ -178,8 +183,6 @@ if opt.training then
     end
     -- compute the tiles
     local dd=16*XX-92
-    local xdim = images[1]:size(2)
-    local ydim = images[1]:size(3)
     local numX=math.ceil(xdim/dd);
     local numY=math.ceil(ydim/dd);
     print(numX)
