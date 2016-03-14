@@ -19,10 +19,10 @@ cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'true means load all images to RAM')
 cmd:option('--clip',5,'max allowed gradient norm in BPTT')
 cmd:option('--randNorm', 0.08, 'initialize parameters using uniform distribution between -uniform and uniform.')
-cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
+cmd:option('--checkpoint',500,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/code/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',40000,'the number of training iterations')
-cmd:option('--HiddenSize',64,'size of hidden layers')
+cmd:option('--HiddenSize',128,'size of hidden layers')
 cmd:option('--XX',10,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
@@ -116,7 +116,7 @@ criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
 -- parameters initialization
 params, gradParams = temporal_model:getParameters()
 if opt.randNorm>0 then
-    params:uniform(-0.08, 0.08) -- small uniform numbers
+    params:uniform(-opt.randNorm, opt.randNorm) -- small uniform numbers
 end
 
 -- initialize the LSTM forget gates with slightly higher biases to encourage remembering in the beginning
