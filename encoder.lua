@@ -198,7 +198,7 @@ if opt.training then
             x2=xi*dd
         end
 
-        for yi=8,numY do
+        for yi=1,numY do
             
             if yi==numY then
                 y2=ydim
@@ -218,7 +218,7 @@ if opt.training then
             end
 
             for ti=2, #files do
-                table.insert(input_table, fm_table[ti]:sub(1,64,x1,x2,y1,y2))
+                table.insert(input_table, fm_table[ti]:sub(1,64,x1,x2,y1,y2):float())
                 table.insert(target_table, torch.reshape(targets[ti]:sub(1,1,x1,x2,y1,y2),dd*dd,1))
             end
 
