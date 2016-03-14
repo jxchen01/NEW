@@ -62,13 +62,13 @@ else
 end
 
 -- 2. Load all the files into RAM
+images = {}
+targets={}
 if opt.RAM then
     -- "images" is a table of tensors of size 1 x L x L 
-    images = {}
     for i,file in ipairs(files) do
         table.insert(images, image.load(file))
     end
-    targets={}
     for i,file in ipairs(files_target) do
         table.insert(targets,image.load(file,1,'byte'))
     end
