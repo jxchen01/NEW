@@ -11,8 +11,8 @@ cmd:text('Options:')
 cmd:option('--dataDir', '/home/jchen16/NEW/data/temporal/encoder', 'the directory to load')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
-cmd:option('--kernalSize',7,'the kernal size of convolution on input feature map')
-cmd:option('--kernalSizeMemory',9,'the kernal size of convolution on the cell state')
+cmd:option('--kernalSize',15,'the kernal size of convolution on input feature map')
+cmd:option('--kernalSizeMemory',7,'the kernal size of convolution on the cell state')
 cmd:option('--learningRate',0.05,'initial learning rate')
 cmd:option('--minLR',0.0005,'minimal learning rate')
 cmd:option('--gpu',1,'gpu device to use')
@@ -22,7 +22,7 @@ cmd:option('--randNorm', 0.08, 'initialize parameters using uniform distribution
 cmd:option('--checkpoint',500,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/code/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',40000,'the number of training iterations')
-cmd:option('--HiddenSize',128,'size of hidden layers')
+cmd:option('--HiddenSize',80,'size of hidden layers')
 cmd:option('--XX',10,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
@@ -163,7 +163,8 @@ for i=1, opt.nIteration do
 		end
 
 		-- reset rnn memory
-	  	temporal_model.modules[1].backwardModule:forget()
+	  	--temporal_model.modules[1].backwardModule:forget()
+	  	temporal_model.modules[1]:forget()
 
 		-- define the evaluation closure 
 		local feval = function (x)
@@ -194,6 +195,7 @@ for i=1, opt.nIteration do
 
     if opt.checkpoint>0 and i%opt.checkpoint==0 then
     	filename=string.format('%s/brnn_%f.bin',opt.CheckPointDir,i);
+    	temporal_model:clearState()
       	torch.save(filename,temporal_model);
    	end
 
