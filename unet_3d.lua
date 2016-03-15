@@ -142,7 +142,7 @@ for i=1, #files do
 		init = data[i].init[1]
 	end
 
-	for j=1, #input_sequence
+	for j=1, #input_sequence do
 		input_sequence[j]=input_sequence[j]:cuda()
 	end
 		
