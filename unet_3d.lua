@@ -165,7 +165,6 @@ for i=1, #files do
 	end
 
 	local output_sequence=temporal_model:forward(input_sequence)
-	print(output_sequence)
 
 	for j=1, #output_sequence do
 		local c=softmax:forward(output_sequence[j]:double())
