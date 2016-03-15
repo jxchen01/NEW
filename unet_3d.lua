@@ -141,6 +141,10 @@ for i=1, #files do
 		input_sequence = data[i].input
 		init = data[i].init[1]
 	end
+
+	for j=1, #input_sequence
+		input_sequence[j]=input_sequence[j]:cuda()
+	end
 		
 	-- reset rnn memory
 	if opt.bi then
