@@ -121,7 +121,7 @@ end
 
 -- initialize the LSTM forget gates with slightly higher biases to encourage remembering in the beginning
 for j=1, #opt.HiddenSize do
-	temporal_model.module.module.modules[j]:initBias(1,0)
+	temporal_model.module.module.modules[j]:initBias(0,0)
 end
 
 print('finish building the model')
@@ -132,13 +132,16 @@ print('finish building the model')
 local data_index = torch.randperm(#files):long() -- feed the training sequences in a random order
 local seq_idx=1
 --temporal_model:training()
-local optim_config = {learningRate = opt.learningRate}
+local optim_config = {learningRate = opt.learningRate, momentum= 0.59}
 for i=1, opt.nIteration do
 	
 	-- fetch one whole sequence 
 	if seq_idx%(#files)==0 then
 		if optim_config.learningRate > opt.minLR then
 			optim_config.learningRate = optim_config.learningRate * 0.75
+		end
+		if optim_config.momentum <0.99 then
+			optim_config.momentum = optim_config.momentum + 0.025
 		end
 		data_index = torch.randperm(#files):long()
 		seq_idx=1;
@@ -195,7 +198,7 @@ for i=1, opt.nIteration do
 			return err, gradParams
 		end
 
-		local _, loss = optim.adam(feval, params, optim_config)
+		local _, loss = optim.sgd(feval, params, optim_config)
 		print('Iter '..i..'('..offset..'), Loss = '..loss[1])
     end
 
@@ -204,7 +207,7 @@ for i=1, opt.nIteration do
 
     if opt.checkpoint>0 and i%opt.checkpoint==0 then
     	filename=string.format('%s/rnn_%f.bin',opt.CheckPointDir,i);
-    	temporal_model:clearState()
+    	--temporal_model:clearState()
       	torch.save(filename,temporal_model);
    	end
 
