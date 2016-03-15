@@ -4,6 +4,7 @@ require 'ConvLSTM'
 require 'optim'
 require 'cutorch'
 require 'cunn'
+require 'image'
 
 cmd = torch.CmdLine()
 cmd:text()
