@@ -9,22 +9,14 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
 cmd:option('--dataDir', '/home/jchen16/NEW/data/temporal/encoder', 'the directory to load')
-cmd:option('--modelPath','/home/jchen16/NEW/checkpoint/rnn_10000.00000.net', 'the directory to the model')
+cmd:option('--outputPath', '/home/jchen16/NEW/data/temporal/output', 'the directory to save outputs')
+cmd:option('--modelPath','/home/jchen16/NEW/checkpoint/brnn_15000.000000.bin', 'the directory to the model')
 cmd:option('--ext','.t7','only load a specific type of files')
-cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
-cmd:option('--kernalSize',7,'the kernal size of convolution on input feature map')
-cmd:option('--kernalSizeMemory',9,'the kernal size of convolution on the cell state')
-cmd:option('--learningRate',0.05,'initial learning rate')
-cmd:option('--minLR',0.0005,'minimal learning rate')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'true means load all images to RAM')
-cmd:option('--clip',5,'max allowed gradient norm in BPTT')
-cmd:option('--randNorm', 0.08, 'initialize parameters using uniform distribution between -uniform and uniform.')
-cmd:option('--checkpoint',100,'the number of iteration to save checkpoints')
-cmd:option('--CheckPointDir','/home/jchen16/NEW/code/checkpoint','the directoty to save checkpoints')
-cmd:option('--nIteration',40000,'the number of training iterations')
-cmd:option('--HiddenSize',{64,64},'size of hidden layers')
+cmd:option('--HiddenSize',{128,64},'size of hidden layers')
 cmd:option('--XX',10,'XX')
+cmd:option('--bi',false,'use bi-directional model or not')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -150,14 +142,20 @@ for i=1, #files do
 	end
 		
 	-- reset rnn memory
-	for j=1, #opt.HiddenSize do
-	  	temporal_model.module.module.modules[j]:forget()
+	if opt.bi then
+		temporal_model.modules[1].backwardModule:forget()
+	else
+		for j=1, #opt.HiddenSize do
+	  		temporal_model.module.module.modules[j]:forget()
+		end
 	end
 
 	-- build initial cell state 
-	for j=1, #opt.HiddenSize do
-		init_cell_state = torch.Tensor(opt.HiddenSize[j],(16*XX-92),(16*XX-92)):copy(init:expand(opt.HiddenSize[j],(16*XX-92),(16*XX-92)))
-	 	temporal_model.module.module.modules[j].userPrevCell = init_cell_state:cuda()
+	if not opt.bi then
+		for j=1, #opt.HiddenSize do
+			init_cell_state = torch.Tensor(opt.HiddenSize[j],(16*XX-92),(16*XX-92)):copy(init:expand(opt.HiddenSize[j],(16*XX-92),(16*XX-92)))
+	 		temporal_model.module.module.modules[j].userPrevCell = init_cell_state:cuda()
+		end
 	end
 
 	local output_sequence=temporal_model:forward(input_sequence)
@@ -166,7 +164,7 @@ for i=1, #files do
 		local c=softmax:forward(output_sequence[j])
 		local d=reshape_back:forward(c)
 		local ff=d:select(3,2)
-		local str= string.format('test_%d_%d.png',i,j);
+		local str= string.format('%s/test_%d_%d.png',opt.outputPath,i,j);
 		image.save(str, ff)
 	end
 		
