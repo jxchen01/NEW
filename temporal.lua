@@ -207,7 +207,7 @@ for i=1, opt.nIteration do
 
     if opt.checkpoint>0 and i%opt.checkpoint==0 then
     	filename=string.format('%s/rnn_%f.bin',opt.CheckPointDir,i);
-    	--temporal_model:clearState()
+    	temporal_model:clearState()
       	torch.save(filename,temporal_model);
    	end
 
