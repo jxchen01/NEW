@@ -10,7 +10,7 @@ cmd:text()
 cmd:text('Options:')
 cmd:option('--dataDir', '/home/jchen16/NEW/data/temporal/encoder', 'the directory to load')
 cmd:option('--outputPath', '/home/jchen16/NEW/data/temporal/output', 'the directory to save outputs')
-cmd:option('--modelPath','/home/jchen16/NEW/checkpoint/brnn_16500.000000.bin', 'the directory to the model')
+cmd:option('--modelPath','/home/jchen16/NEW/code/checkpoint/brnn_16500.000000.bin', 'the directory to the model')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'true means load all images to RAM')
@@ -131,6 +131,7 @@ softmax = nn.SoftMax()
 reshape_back = nn.Reshape((16*XX-92),(16*XX-92),2)
 
 for i=1, #files do
+	print(i)
 
 	if not opt.RAW then
 		a=torch.load(files[i])
