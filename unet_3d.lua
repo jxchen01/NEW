@@ -167,7 +167,7 @@ for i=1, #files do
 	local output_sequence=temporal_model:forward(input_sequence)
 
 	for j=1, #output_sequence do
-		local c=softmax:forward(output_sequence[j])
+		local c=softmax:forward(output_sequence[j]:float())
 		local d=reshape_back:forward(c)
 		local ff=d:select(3,2)
 		local str= string.format('%s/test_%d_%d.png',opt.outputPath,i,j);
