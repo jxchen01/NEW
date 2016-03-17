@@ -104,129 +104,129 @@ end
 
 input = nn.Identity()()
 
-L1a=nn.SpatialConvolution(opt.imageType, 64, 3, 3, 1, 1, 0, 0)(input)
-L1b=nn.ReLU(true)(L1a)
-L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
+L1a=cudnn.SpatialConvolution(opt.imageType, 64, 3, 3, 1, 1, 0, 0)(input)
+L1b=cudnn.ReLU(true)(L1a)
+L1c=cudnn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
 if opt.dropoutProb>0 then
    L1d=nn.SpatialDropout(opt.dropoutProb)(L1c)
-   L1=nn.ReLU(true)(L1d)
+   L1=cudnn.ReLU(true)(L1d)
 else
-   L1=nn.ReLU(true)(L1c)
+   L1=cudnn.ReLU(true)(L1c)
 end
 
 
-L2a=nn.SpatialMaxPooling(2, 2, 2, 2)(L1)
-L2b=nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0)(L2a)
-L2c=nn.ReLU()(L2b)
-L2d=nn.SpatialConvolution(128, 128, 3, 3, 1, 1, 0, 0)(L2c)
+L2a=cudnn.SpatialMaxPooling(2, 2, 2, 2)(L1)
+L2b=cudnn.SpatialConvolution(64, 128, 3, 3, 1, 1, 0, 0)(L2a)
+L2c=cudnn.ReLU()(L2b)
+L2d=cudnn.SpatialConvolution(128, 128, 3, 3, 1, 1, 0, 0)(L2c)
 if opt.dropoutProb>0 then
    L2e=nn.SpatialDropout(opt.dropoutProb)(L2d)
-   L2=nn.ReLU(true)(L2e)
+   L2=cudnn.ReLU(true)(L2e)
 else
-   L2=nn.ReLU(true)(L2d)
+   L2=cudnn.ReLU(true)(L2d)
 end
 
-L3a=nn.SpatialMaxPooling(2, 2, 2, 2)(L2)
-L3b=nn.SpatialConvolution(128, 256, 3, 3, 1, 1, 0, 0)(L3a)
-L3c=nn.ReLU(true)(L3b)
-L3d=nn.SpatialConvolution(256, 256, 3, 3, 1, 1, 0, 0)(L3c)
+L3a=cudnn.SpatialMaxPooling(2, 2, 2, 2)(L2)
+L3b=cudnn.SpatialConvolution(128, 256, 3, 3, 1, 1, 0, 0)(L3a)
+L3c=cudnn.ReLU(true)(L3b)
+L3d=cudnn.SpatialConvolution(256, 256, 3, 3, 1, 1, 0, 0)(L3c)
 if opt.dropoutProb>0 then
    L3e=nn.SpatialDropout(opt.dropoutProb)(L3d)
-   L3=nn.ReLU(true)(L3e)
+   L3=cudnn.ReLU(true)(L3e)
 else
-   L3=nn.ReLU(true)(L3d)
+   L3=cudnn.ReLU(true)(L3d)
 end
 
-L4a=nn.SpatialMaxPooling(2, 2, 2, 2)(L3)
-L4b=nn.SpatialConvolution(256, 512, 3, 3, 1, 1, 0, 0)(L4a)
-L4c=nn.ReLU(true)(L4b)
-L4d=nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 0, 0)(L4c)
+L4a=cudnn.SpatialMaxPooling(2, 2, 2, 2)(L3)
+L4b=cudnn.SpatialConvolution(256, 512, 3, 3, 1, 1, 0, 0)(L4a)
+L4c=cudnn.ReLU(true)(L4b)
+L4d=cudnn.SpatialConvolution(512, 512, 3, 3, 1, 1, 0, 0)(L4c)
 if opt.dropoutProb>0 then
    L4e=nn.SpatialDropout(opt.dropoutProb)(L4d)
-   L4=nn.ReLU(true)(L4e)
+   L4=cudnn.ReLU(true)(L4e)
 else
-   L4=nn.ReLU(true)(L4d)
+   L4=cudnn.ReLU(true)(L4d)
 end
 
-L5a=nn.SpatialMaxPooling(2, 2, 2, 2)(L4)
-L5b=nn.SpatialConvolution(512, 1024, 3, 3, 1, 1, 0, 0)(L5a)
-L5c=nn.ReLU(true)(L5b)
-L5d=nn.SpatialConvolution(1024, 1024, 3, 3, 1, 1, 0, 0)(L5c)
+L5a=cudnn.SpatialMaxPooling(2, 2, 2, 2)(L4)
+L5b=cudnn.SpatialConvolution(512, 1024, 3, 3, 1, 1, 0, 0)(L5a)
+L5c=cudnn.ReLU(true)(L5b)
+L5d=cudnn.SpatialConvolution(1024, 1024, 3, 3, 1, 1, 0, 0)(L5c)
 if opt.dropoutProb>0 then
    L5e=nn.SpatialDropout(opt.dropoutProb)(L5d)
-   L5=nn.ReLU(true)(L5e)
+   L5=cudnn.ReLU(true)(L5e)
 else
-   L5=nn.ReLU(true)(L5d)
+   L5=cudnn.ReLU(true)(L5d)
 end
 
 Crop4=nn.Narrow(2,4,2*XX-4)(L4)
 L4cp=nn.Narrow(3,4,2*XX-4)(Crop4)
-L5up=nn.SpatialFullConvolution(1024, 512, 2, 2, 2, 2)(L5)
+L5up=cudnn.SpatialFullConvolution(1024, 512, 2, 2, 2, 2)(L5)
 
 L6a=nn.JoinTable(1,3)({L5up,L4cp})
-L6b=nn.SpatialConvolution(1024,512, 3, 3, 1, 1, 0, 0)(L6a)
-L6c=nn.ReLU(true)(L6b)
-L6d=nn.SpatialConvolution(512,512, 3, 3, 1, 1, 0, 0)(L6c)
+L6b=cudnn.SpatialConvolution(1024,512, 3, 3, 1, 1, 0, 0)(L6a)
+L6c=cudnn.ReLU(true)(L6b)
+L6d=cudnn.SpatialConvolution(512,512, 3, 3, 1, 1, 0, 0)(L6c)
 if opt.dropoutProb>0 then
    L6e=nn.SpatialDropout(opt.dropoutProb)(L6d)
-   L6=nn.ReLU(true)(L6e)
+   L6=cudnn.ReLU(true)(L6e)
 else
-   L6=nn.ReLU(true)(L6d)
+   L6=cudnn.ReLU(true)(L6d)
 end
 
 Crop3=nn.Narrow(2,16,4*XX-16)(L3)
 L3cp=nn.Narrow(3,16,4*XX-16)(Crop3)
-L6up=nn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
+L6up=cudnn.SpatialFullConvolution(512, 256, 2, 2, 2, 2)(L6)
 
 L7a=nn.JoinTable(1,3)({L6up,L3cp})
-L7b=nn.SpatialConvolution(512,256, 3, 3, 1, 1, 0, 0)(L7a)
-L7c=nn.ReLU(true)(L7b)
-L7d=nn.SpatialConvolution(256,256, 3, 3, 1, 1, 0, 0)(L7c)
+L7b=cudnn.SpatialConvolution(512,256, 3, 3, 1, 1, 0, 0)(L7a)
+L7c=cudnn.ReLU(true)(L7b)
+L7d=cudnn.SpatialConvolution(256,256, 3, 3, 1, 1, 0, 0)(L7c)
 if opt.dropoutProb>0 then
    L7e=nn.SpatialDropout(opt.dropoutProb)(L7d)
-   L7=nn.ReLU(true)(L7e)
+   L7=cudnn.ReLU(true)(L7e)
 else
-   L7=nn.ReLU(true)(L7d)
+   L7=cudnn.ReLU(true)(L7d)
 end
 
 Crop2=nn.Narrow(2,40,8*XX-40)(L2)
 L2cp=nn.Narrow(3,40,8*XX-40)(Crop2)
-L7up=nn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
+L7up=cudnn.SpatialFullConvolution(256, 128, 2, 2, 2, 2)(L7)
 
 L8a=nn.JoinTable(1,3)({L7up,L2cp})
-L8b=nn.SpatialConvolution(256,128, 3, 3, 1, 1, 0, 0)(L8a)
-L8c=nn.ReLU(true)(L8b)
-L8d=nn.SpatialConvolution(128,128, 3, 3, 1, 1, 0, 0)(L8c)
+L8b=cudnn.SpatialConvolution(256,128, 3, 3, 1, 1, 0, 0)(L8a)
+L8c=cudnn.ReLU(true)(L8b)
+L8d=cudnn.SpatialConvolution(128,128, 3, 3, 1, 1, 0, 0)(L8c)
 if opt.dropoutProb>0 then
    L8e=nn.SpatialDropout(opt.dropoutProb)(L8d)
-   L8=nn.ReLU(true)(L8e)
+   L8=cudnn.ReLU(true)(L8e)
 else
-   L8=nn.ReLU(true)(L8d)
+   L8=cudnn.ReLU(true)(L8d)
 end
 
 Crop1=nn.Narrow(2,88,16*XX-88)(L1)
 L1cp=nn.Narrow(3,88,16*XX-88)(Crop1)
-L8up=nn.SpatialFullConvolution(128, 64, 2, 2, 2, 2)(L8)
+L8up=cudnn.SpatialFullConvolution(128, 64, 2, 2, 2, 2)(L8)
 
 L9a=nn.JoinTable(1,3)({L8up,L1cp})
-L9b=nn.SpatialConvolution(128,64, 3, 3, 1, 1, 0, 0)(L9a)
-L9c=nn.ReLU(true)(L9b)
-L9d=nn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0)(L9c)
+L9b=cudnn.SpatialConvolution(128,64, 3, 3, 1, 1, 0, 0)(L9a)
+L9c=cudnn.ReLU(true)(L9b)
+L9d=cudnn.SpatialConvolution(64,64, 3, 3, 1, 1, 0, 0)(L9c)
 if opt.dropoutProb>0 then
    L9e=nn.SpatialDropout(opt.dropoutProb)(L9d)
-   L9=nn.ReLU(true)(L9e)
+   L9=cudnn.ReLU(true)(L9e)
 else
-   L9=nn.ReLU(true)(L9d)
+   L9=cudnn.ReLU(true)(L9d)
 end
 
-L10=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
+L10=cudnn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 
 --L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 --L10b=nn.Transpose({1,2},{2,3})(L10a)
 --L10=nn.Reshape((16*XX-92)*(16*XX-92),2)(L10b)
 
-unet = nn.gModule({input},{L10})
-cudnn.convert(unet,cudnn):cuda()
+unet = nn.gModule({input},{L10}):cuda()
+--cudnn.convert(unet,cudnn):cuda()
 
 local finput, fgradInput
 unet:apply(function(m)  if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
