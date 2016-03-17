@@ -278,13 +278,14 @@ function train()
          gradParameters:zero()
 
          local idx = image_index[i]
-         local input_image, label_image
+         local input_image={}
+         local label_image={}
          if not opt.RAM then
-            input_image=images[idx]:cuda()
-            label_image=labels[idx]:cuda()
+            table.insert(input_image,images[idx]:cuda())
+            table.insert(label_image,labels[idx]:cuda())
          else
-            input_image=image.load(files[idx]):float():cuda()
-            label_image=torch.reshape(image.load(files_lab[idx],1,'byte'),(16*XX-92)*(16*XX-92),1):cuda()
+            table.insert(input_image, image.load(files[idx]):float():cuda())
+            table.insert(label_image, image.load(files_lab[idx],1,'byte'):cuda())
          end
 
          local output_image = unet:forward(input_image)
