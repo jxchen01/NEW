@@ -20,9 +20,10 @@ cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to 
 cmd:option('--checkpoint',5,'save checkpoints')
 cmd:option('--momentum',0.69,'momentum for training')
 cmd:option('--clip',5,'max allowed norm ')
-cmd:option('--XX',10,'the key parameter to determine the size of image')
+cmd:option('--XX',10,'the key parameter to determine the size of image, max is 39')
 cmd:option('--RAM',false,'false means load all images to RAM')
 cmd:option('--gpu',1,'gpu device to use')
+cmd:option('--imageType',1,'1: grayscale, 3: RGB')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -75,17 +76,18 @@ if not opt.RAM then
    end
 end
 --]]
+
 -- random data for test 
 
 images={}
 labels={}
-
 files={'1','1','1','11','11'}
 
 for kk=1,5 do
-   table.insert(images,torch.rand(3,16*XX+92,16*XX+92):float())
+   table.insert(images,torch.rand(1,16*XX+92,16*XX+92):float())
    table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):float())
 end
+
 
 
 
@@ -100,7 +102,7 @@ end
 
 input = nn.Identity()()
 
-L1a=nn.SpatialConvolution(3, 64, 3, 3, 1, 1, 0, 0)(input)
+L1a=nn.SpatialConvolution(opt.imageType, 64, 3, 3, 1, 1, 0, 0)(input)
 L1b=nn.ReLU(true)(L1a)
 L1c=nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 0, 0)(L1b)
 if opt.dropoutProb>0 then
