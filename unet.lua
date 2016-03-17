@@ -18,7 +18,7 @@ cmd:option('--dropoutProb', 0.25, 'probability of zeroing a neuron (dropout prob
 cmd:option('--uniform', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to save network files')
 cmd:option('--checkpoint',5,'save checkpoints')
-cmd:option('--momentum',0.69,'momentum for training')
+cmd:option('--momentum',0.69,'initial momentum for training')
 cmd:option('--clip',5,'max allowed norm ')
 cmd:option('--XX',10,'the key parameter to determine the size of image, max is 39')
 cmd:option('--RAM',false,'false means load all images to RAM')
@@ -32,7 +32,7 @@ cutorch.setDevice(opt.gpu)
 XX=opt.XX
 
 -- 1. Get the list of files in the given directory
---[[
+
 files = {}
 
 for file in paths.files(opt.imageDir) do
@@ -62,11 +62,11 @@ table.sort(files_lab, function (a,b) return a < b end)
 
 if not opt.RAM then
 -- 2. Load all the files into RAM
--- "images" is a table of tensors of size 1 x L x L 
+-- "images" is a table of tensors of size opt.imageType x W x H 
    images = {}
    for i,file in ipairs(files) do
       -- load each image
-      table.insert(images, image.load(file))
+      table.insert(images, image.load(file):float())
    end
 
    labels = {}
@@ -75,10 +75,10 @@ if not opt.RAM then
       --table.insert(labels, loader:forward(image.load(file,1,'byte')) )
    end
 end
---]]
+
 
 -- random data for test 
-
+--[[
 images={}
 labels={}
 files={'1','1','1','11','11'}
@@ -87,9 +87,7 @@ for kk=1,5 do
    table.insert(images,torch.rand(1,16*XX+92,16*XX+92):float())
    table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):float())
 end
-
-
-
+--]]
 
 
 -- 3. Define the model 
@@ -261,7 +259,7 @@ function train()
       end
 
       if config.momentum < 0.9 then
-         config.momentum = config.momentum + 0.15
+         config.momentum = config.momentum + 0.1
       end
    end 
 
@@ -278,7 +276,7 @@ function train()
             input_image=images[idx]:cuda()
             label_image=labels[idx]:cuda()
          else
-            input_image=image.load(files[idx]):cuda()
+            input_image=image.load(files[idx]):float():cuda()
             label_image=torch.reshape(image.load(files_lab[idx],1,'byte'),(16*XX-92)*(16*XX-92),1):cuda()
          end
 
@@ -308,7 +306,6 @@ function train()
       filename=string.format('%s/net_%f.bin',opt.CheckPointDir,epoch);
       torch.save(filename,unet);
    end
-
 
    epoch = epoch + 1
 end
