@@ -90,7 +90,7 @@ files={'1','1','1','11','11'}
 
 for kk=1,5 do
    table.insert(images,torch.rand(1,16*XX+92,16*XX+92):float())
-   table.insert(labels,torch.ByteTensor((16*XX-92),(16*XX-92)):random(1,2)
+   table.insert(labels,torch.ByteTensor((16*XX-92),(16*XX-92)):random(1,2))
 end
 
 
