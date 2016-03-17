@@ -17,7 +17,7 @@ cmd:option('--minLR',0.0005,'minimal learning rate')
 cmd:option('--dropoutProb', 0.25, 'probability of zeroing a neuron (dropout probability)')
 cmd:option('--uniform', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to save network files')
-cmd:option('--checkpoint',4,'save checkpoints')
+cmd:option('--checkpoint',5,'save checkpoints')
 cmd:option('--momentum',0.69,'momentum for training')
 cmd:option('--clip',5,'max allowed norm ')
 cmd:option('--XX',10,'the key parameter to determine the size of image')
@@ -31,7 +31,7 @@ cutorch.setDevice(opt.gpu)
 XX=opt.XX
 
 -- 1. Get the list of files in the given directory
-
+--[[
 files = {}
 
 for file in paths.files(opt.imageDir) do
@@ -74,17 +74,17 @@ if not opt.RAM then
       --table.insert(labels, loader:forward(image.load(file,1,'byte')) )
    end
 end
-
+--]]
 -- random data for test 
---[[
+
 images={}
 labels={}
 
 for kk=1,5 do
-   table.insert(images,torch.rand(1,16*XX+92,16*XX+92))
-   table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2))
+   table.insert(images,torch.rand(1,16*XX+92,16*XX+92):float())
+   table.insert(labels,torch.Tensor((16*XX-92)*(16*XX-92),1):random(1,2):float())
 end
---]]
+
 
 
 
@@ -221,9 +221,8 @@ L10=nn.Reshape((16*XX-92)*(16*XX-92),2)(L10b)
 
 unet = nn.gModule({input},{L10}):cuda()
 
-
 local finput, fgradInput
-unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
+unet:apply(function(m)  if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
                            finput = finput or m.finput
                            fgradInput = fgradInput or m.fgradInput
                            m.finput = finput
@@ -231,13 +230,11 @@ unet:apply(function(m) if torch.type(m) == 'nn.SpatialConvolution' or torch.type
                         end
             end)
 
-
 criterion = nn.CrossEntropyCriterion():cuda()
 
 collectgarbage()
 
 -- Training 
-
 if opt.uniform > 0 then
    for k,param in ipairs(unet:parameters()) do
       param:uniform(-opt.uniform, opt.uniform)
