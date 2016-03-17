@@ -32,6 +32,7 @@ opt = cmd:parse(arg or {})
 cutorch.setDevice(opt.gpu)
 cudnn.benchmark = true
 cudnn.fastest = true
+cudnn.verbose = true
 
 XX=opt.XX
 
@@ -88,8 +89,8 @@ labels={}
 files={'1','1','1','11','11'}
 
 for kk=1,5 do
-   table.insert(images,torch.rand(4,1,16*XX+92,16*XX+92):float())
-   table.insert(labels,torch.Tensor(4,(16*XX-92),(16*XX-92)):random(1,2):float())
+   table.insert(images,torch.rand(1,16*XX+92,16*XX+92):float())
+   table.insert(labels,torch.ByteTensor((16*XX-92),(16*XX-92)):random(1,2)
 end
 
 
