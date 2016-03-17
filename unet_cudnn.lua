@@ -89,8 +89,8 @@ labels={}
 files={'1','1','1','11','11'}
 
 for kk=1,5 do
-   table.insert(images,torch.rand( 1, 16*XX+92,16*XX+92):float())
-   table.insert(labels,torch.ByteTensor( (16*XX-92),(16*XX-92)):random(1,2))
+   table.insert(images,torch.rand(4, 1, 16*XX+92,16*XX+92):float())
+   table.insert(labels,torch.ByteTensor(4, (16*XX-92),(16*XX-92)):random(1,2))
 end
 
 
@@ -278,6 +278,9 @@ function train()
          gradParameters:zero()
 
          local idx = image_index[i]
+         local input_image = images[idx]:cuda()
+         local label_image = labels[idx]:cuda()
+         --[[
          local input_image={}
          local label_image={}
          if not opt.RAM then
@@ -287,6 +290,7 @@ function train()
             table.insert(input_image, image.load(files[idx]):float():cuda())
             table.insert(label_image, image.load(files_lab[idx],1,'byte'):cuda())
          end
+         --]]
 
          local output_image = unet:forward(input_image)
          local err = criterion:forward(output_image, label_image)
