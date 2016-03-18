@@ -21,7 +21,7 @@ cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to 
 cmd:option('--checkpoint',5,'save checkpoints')
 cmd:option('--momentum',0.69,'initial momentum for training')
 cmd:option('--clip',5,'max allowed norm ')
-cmd:option('--XX',10,'the key parameter to determine the size of image, max is 39')
+cmd:option('--XX',10,'the key parameter to determine the size of image, max is 54')
 cmd:option('--RAM',false,'false means load all images to RAM')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--imageType',1,'1: grayscale, 3: RGB')
@@ -37,7 +37,7 @@ cudnn.fastest = true
 XX=opt.XX
 
 -- 1. Get the list of files in the given directory
---[[
+
 files = {}
 
 for file in paths.files(opt.imageDir) do
@@ -76,14 +76,13 @@ if not opt.RAM then
 
    labels = {}
    for i, file in ipairs(files_lab) do 
-      table.insert(labels, torch.reshape(image.load(file,1,'byte'),(16*XX-92)*(16*XX-92),1))
-      --table.insert(labels, loader:forward(image.load(file,1,'byte')) )
+      table.insert(labels, image.load(file,1,'byte'))
    end
 end
---]]
+
 
 -- random data for test 
-
+--[[
 images={}
 labels={}
 files={'1','1','1','11','11'}
@@ -92,7 +91,7 @@ for kk=1,5 do
    table.insert(images,torch.rand(1, 1, 16*XX+92,16*XX+92):float())
    table.insert(labels,torch.ByteTensor(1, (16*XX-92),(16*XX-92)):random(1,2))
 end
-
+--]]
 
 
 -- 3. Define the model 
@@ -278,8 +277,28 @@ function train()
          gradParameters:zero()
 
          local idx = image_index[i]
-         local input_image = images[idx]:cuda()
-         local label_image = labels[idx]:cuda()
+         local input_image, label_image
+         if not opt.RAM then
+            input_image = torch.Tensor(1,images[idx]:size(2), images[idx]:size(3))     
+            input_image[1] = images[idx]
+            input_image = input_image:cuda()
+            
+            label_image = torch.Tensor(1,labels[idx]:size(2), images[idx]:size(3))     
+            lable_image[1] = labels[idx]
+            label_image = label_image:cuda()
+         else
+            local img = image.load(files[idx]:float()
+            local lab = image.load(files_lab[idx],1,'byte'))
+
+            input_image = torch.Tensor(1,img:size(2),img:size(3))
+            input_image[1] = img:copy()
+            input_image = input_image:cuda()
+
+            label_image = torch.Tensor(1,lab:size(2),lab:size(3))
+            lable_image[1] = lab:copy()
+            lable_image = label_image:cuda()
+         end
+
          --[[
          local input_image={}
          local label_image={}
