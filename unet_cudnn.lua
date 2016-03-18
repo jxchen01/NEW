@@ -14,7 +14,7 @@ cmd:option('--labelDir', '/home/jchen16/NEW/data/X10/label/', 'the directory to 
 cmd:option('--ext','.png','only load a specific type of images')
 cmd:option('--epoch',100,'the number of iterations trained on the whole dataset')
 cmd:option('--learningRate',0.005,'initial learning rate')
-cmd:option('--minLR',0.0005,'minimal learning rate')
+cmd:option('--minLR',0.0001,'minimal learning rate')
 cmd:option('--dropoutProb', 0.25, 'probability of zeroing a neuron (dropout probability)')
 cmd:option('--uniform', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to save network files')
@@ -32,7 +32,7 @@ opt = cmd:parse(arg or {})
 cutorch.setDevice(opt.gpu)
 cudnn.benchmark = true
 cudnn.fastest = true
-cudnn.verbose = true
+--cudnn.verbose = true
 
 XX=opt.XX
 
@@ -89,8 +89,8 @@ labels={}
 files={'1','1','1','11','11'}
 
 for kk=1,5 do
-   table.insert(images,torch.rand(4, 1, 16*XX+92,16*XX+92):float())
-   table.insert(labels,torch.ByteTensor(4, (16*XX-92),(16*XX-92)):random(1,2))
+   table.insert(images,torch.rand(1, 1, 16*XX+92,16*XX+92):float())
+   table.insert(labels,torch.ByteTensor(1, (16*XX-92),(16*XX-92)):random(1,2))
 end
 
 
