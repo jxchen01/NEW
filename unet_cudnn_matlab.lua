@@ -21,7 +21,7 @@ cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to 
 cmd:option('--checkpoint',5000,'save checkpoints')
 cmd:option('--momentum',0.69,'initial momentum for training')
 cmd:option('--clip',-1,'max allowed norm ')
-cmd:option('--XX',10,'the key parameter to determine the size of image, max is 54')
+cmd:option('--XX',20,'the key parameter to determine the size of image, max is 54')
 cmd:option('--RAM',false,'whether to load all images to RAM')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--imageType',1,'1: grayscale, 3: RGB')
@@ -276,8 +276,8 @@ function train()
             local input_image = image_seq[image_index[j]]:cuda()
             local label_image = target_seq[image_index[j]]:cuda()
 
-            print(input_image)
-            print(label_image)
+            print(input_image:size())
+            print(label_image:size())
          --[[
          local input_image={}
          local label_image={}
