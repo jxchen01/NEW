@@ -275,11 +275,15 @@ function train()
          
             local input_image = torch.FloatTensor(1,opt.imageType,16*XX+92,16*XX+92)
             input_image[1][1]=image_seq[image_index[j]]
-            image.save('test1.png',input_image[1]);
+            if j==1 then
+               image.save('test1.png',input_image[1]);
+            end
             input_image = input_image:cuda()
             local label_image = torch.ByteTensor(1,16*XX-92, 16*XX-92)
             label_image[1]=target_seq[image_index[j]]
-            image.save('test2.png',label_image[1]);
+            if j==1 then
+               image.save('test2.png',label_image[1]);
+            end
             label_image = label_image:cuda()
 
          --[[
