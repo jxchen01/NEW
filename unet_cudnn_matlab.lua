@@ -273,7 +273,7 @@ function train()
             if x ~= parameters then parameters:copy(x) end
             gradParameters:zero()
          
-            local input_image = torch.FloatTensor(1,16*XX+92,16*XX+92)
+            local input_image = torch.FloatTensor(1,opt.imageType,16*XX+92,16*XX+92)
             input_image[1]=image_seq[image_index[j]]
             input_image = input_image:cuda()
             local label_image = torch.ByteTensor(1,16*XX-92, 16*XX-92)
@@ -326,39 +326,4 @@ end
 for iter=1, opt.epoch do
    train()
 end
-
-
--- Traininig by Manual Loop 
---[[
-lr = opt.learningRate
-for k=1, opt.epoch do
-   image_index = torch.randperm(#images):long()
-   for i =1, #images do
-      local idx = image_index[i]
-      input_image=images[idx]:cuda()
-      label_image=labels[idx]:cuda()
-
-      output_image = unet:forward(input_image)
-      local err = criterion:forward(output_image, label_image)
-      local gradCriterion = criterion:backward(output_image, label_image)
-      unet:zeroGradParameters()
-      unet:backward(input_image,gradCriterion)
-      unet:updateParameters(lr)
-
-      print(label_image:float())
-
-      print('Iter: '..k..' ('..i..'), Loss= '..err)
-
-      if i%5==0 then
-         collectgarbage()
-      end
-   end
-
-   if (k % opt.checkpoint ==0) then
-      filename=string.format('%s/net_%f.bin',opt.CheckPointDir,k);
-      torch.save(filename,unet);
-   end
-end
---]]
-
 

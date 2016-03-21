@@ -279,7 +279,7 @@ function train()
          local idx = image_index[i]
          local input_image, label_image
          if not opt.RAM then
-            input_image = torch.Tensor(1,images[idx]:size(2), images[idx]:size(3))     
+            input_image = torch.Tensor(1, opt.imageType ,images[idx]:size(2), images[idx]:size(3))     
             input_image[1] = images[idx]
             input_image = input_image:cuda()
             
