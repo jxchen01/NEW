@@ -268,13 +268,16 @@ function train()
 
       image_index = torch.randperm(#image_seq):long()
       for j=1,#image_seq do
-         local input_image = image_seq[image_index[j]]:cuda()
-         local label_image = target_seq[image_index[j]]:cuda()
       
          local feval = function (x)
             if x ~= parameters then parameters:copy(x) end
             gradParameters:zero()
          
+            local input_image = image_seq[image_index[j]]:cuda()
+            local label_image = target_seq[image_index[j]]:cuda()
+
+            print(input_image)
+            print(label_image)
          --[[
          local input_image={}
          local label_image={}
