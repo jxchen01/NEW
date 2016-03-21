@@ -273,11 +273,13 @@ function train()
             if x ~= parameters then parameters:copy(x) end
             gradParameters:zero()
          
-            local input_image = image_seq[image_index[j]]:cuda()
-            local label_image = target_seq[image_index[j]]:cuda()
+            local input_image = torch.FloatTensor(1,16*XX+92,16*XX+92)
+            input_image[1]=image_seq[image_index[j]]
+            input_image = input_image:cuda()
+            local label_image = torch.ByteTensor(1,16*XX-92, 16*XX-92)
+            label_image[1]=target_seq[image_index[j]]
+            label_image = label_image:cuda()
 
-            print(input_image:size())
-            print(label_image:size())
          --[[
          local input_image={}
          local label_image={}
