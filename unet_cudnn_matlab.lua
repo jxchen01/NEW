@@ -262,8 +262,8 @@ function train()
          target_seq = data[idx].target
       else
          local data = matio.load(files[idx])
-         image_seq = data.image:copy()
-         target_seq = data.target:copy()
+         image_seq = data.image
+         target_seq = data.target
       end
 
       image_index = torch.randperm(#image_seq):long()
