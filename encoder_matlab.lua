@@ -15,7 +15,7 @@ cmd:option('--modelPath','/home/jchen16/NEW/code/checkpoint/unet_30000.000000.bi
 cmd:option('--imageDir', '/home/jchen16/NEW/data/fungus/training_data', 'the directory to load')
 cmd:option('--outputDir', '/home/jchen16/NEW/data/fungus/encoder', 'the directory to save the input for RNN')
 cmd:option('--segDir','/home/jchen16/NEW/data/temporal/prob','the directoty to save unet seg results')
-cmd:option('--ext','.png','only load a specific type of images')
+cmd:option('--ext','.mat','only load a specific type of images')
 cmd:option('--training',false,'training mode or not')
 cmd:option('--RAM',false,'load to RAM or not')
 cmd:option('--XX',20,'the key parameter to determine the size of image')
@@ -51,9 +51,6 @@ if opt.RAM then
       table.insert(data, matio.load(file))
    end
 end
-
-xdim = images[1]:size(2)
-ydim = images[1]:size(3)
 
 -- 3. Load Model
 unet=torch.load(opt.modelPath)
