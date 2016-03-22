@@ -256,7 +256,7 @@ function train()
    for i =1,#files do
 
       local idx = seq_index[i]
-      local input_image, label_image
+      local input_seq, label_seq
       if opt.RAM then
          image_seq = data[idx].image
          target_seq = data[idx].target

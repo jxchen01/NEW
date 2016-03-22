@@ -20,6 +20,7 @@ cmd:option('--RAM',false,'load to RAM or not')
 cmd:option('--XX',10,'the key parameter to determine the size of image')
 cmd:option('--rho',3,'the length of sequence in RNN')
 cmd:option('--gpu',1,'the gpu to use')
+cmd:option('--outputLayer',1,'1 means the last one, 2 means the second last one')
 cmd:text()
 opt = cmd:parse(arg or {})
 
