@@ -93,6 +93,7 @@ for i=1, #files do
             fm=unet.modules[66].output[1]
         end
         table.insert(fm_seq, fm:float())
+        print(fm:size())
         if i==1 and j==1 then
             local softmax = nn.SoftMax()
             out = softmax:forward(b[1])
