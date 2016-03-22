@@ -222,11 +222,11 @@ unet:apply(function(m)  if torch.type(m) == 'nn.SpatialConvolution' or torch.typ
 
 --criterion = nn.CrossEntropyCriterion():cuda()
 weights=torch.FloatTensor(4)
-weights[1]=1
-weights[2]=1
-weights[3]=2 
-weights[4]=1.5
-criterion = cudnn.SpatialCrossEntropyCriterion():cuda()
+weights[1]=0.15
+weights[2]=0.15
+weights[3]=0.45 
+weights[4]=0.25
+criterion = cudnn.SpatialCrossEntropyCriterion(weights):cuda()
 
 collectgarbage()
 
