@@ -201,7 +201,7 @@ else
    L9=cudnn.ReLU(true)(L9d)
 end
 
-L10=cudnn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
+L10=cudnn.SpatialConvolution(64, 4, 1, 1, 1, 1, 0, 0)(L9)
 
 --L10a=nn.SpatialConvolution(64, 2, 1, 1, 1, 1, 0, 0)(L9)
 --L10b=nn.Transpose({1,2},{2,3})(L10a)
