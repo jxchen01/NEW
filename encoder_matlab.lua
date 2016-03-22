@@ -11,10 +11,9 @@ matio=require 'matio'
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
-cmd:option('--modelPath','/home/jchen16/NEW/code/checkpoint/net_100.000000.bin','path to the trained model')
-cmd:option('--imageDir', '/home/jchen16/NEW/data/temporal/raw', 'the directory to load')
-cmd:option('--targetDir','/home/jchen16/NEW/data/temporal/mask','directory to the mask')
-cmd:option('--outputDir', '/home/jchen16/NEW/data/temporal/encoder', 'the directory to save the input for RNN')
+cmd:option('--modelPath','/home/jchen16/NEW/code/checkpoint/unet_30000.000000.bin','path to the trained model')
+cmd:option('--imageDir', '/home/jchen16/NEW/data/fungus/training_data', 'the directory to load')
+cmd:option('--outputDir', '/home/jchen16/NEW/data/fungus/encoder', 'the directory to save the input for RNN')
 cmd:option('--segDir','/home/jchen16/NEW/data/temporal/prob','the directoty to save unet seg results')
 cmd:option('--ext','.png','only load a specific type of images')
 cmd:option('--training',false,'training mode or not')
@@ -83,6 +82,8 @@ for i=1, #files do
     local fm_seq={}
 
 	for j=1,#image_seq do
+        print('i='..i..', j='..j)
+
         local input_image = torch.FloatTensor(1,opt.imageType,16*XX+92,16*XX+92)
         input_image[1][1]=image_seq[j]
 
