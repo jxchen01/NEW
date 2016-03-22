@@ -13,8 +13,8 @@ cmd:text('Options:')
 cmd:option('--imageDir', '/home/jchen16/NEW/data/fungus/training_data/', 'the directory to load')
 cmd:option('--ext','.mat','only load a specific type of data')
 cmd:option('--epoch',600,'the number of iterations trained on the whole dataset')
-cmd:option('--learningRate',0.005,'initial learning rate')
-cmd:option('--minLR',0.0001,'minimal learning rate')
+cmd:option('--learningRate',0.002,'initial learning rate')
+cmd:option('--minLR',0.00001,'minimal learning rate')
 cmd:option('--dropoutProb', 0.25, 'probability of zeroing a neuron (dropout probability)')
 cmd:option('--uniform', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
 cmd:option('--CheckPointDir', '/home/jchen16/NEW/code/checkpoint','directory to save network files')
@@ -222,10 +222,10 @@ unet:apply(function(m)  if torch.type(m) == 'nn.SpatialConvolution' or torch.typ
 
 --criterion = nn.CrossEntropyCriterion():cuda()
 weights=torch.FloatTensor(4)
-weights[1]=0.15
-weights[2]=0.15
-weights[3]=0.45 
-weights[4]=0.25
+weights[1]=0.1
+weights[2]=0.1
+weights[3]=0.5 
+weights[4]=0.3
 criterion = cudnn.SpatialCrossEntropyCriterion(weights):cuda()
 
 collectgarbage()
