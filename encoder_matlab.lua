@@ -93,9 +93,9 @@ for i=1, #files do
             fm=unet.modules[66].output[1]
         end
         table.insert(fm_seq, fm:float())
-        if i==36 and j==1 then
+        if i==1 and j==1 then
             local softmax = nn.SoftMax()
-            out = softMax:forward(b[1])
+            out = softmax:forward(b[1])
             image.save('test1.png',out:select(1,3))
             image.save('test2.png',out:select(1,4))
         end
