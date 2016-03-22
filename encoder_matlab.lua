@@ -22,6 +22,7 @@ cmd:option('--XX',20,'the key parameter to determine the size of image')
 cmd:option('--rho',3,'the length of sequence in RNN')
 cmd:option('--gpu',1,'the gpu to use')
 cmd:option('--outputLayer',1,'1 means the last one, 2 means the second last one')
+cmd:option('--imageType',1,'1: grayscale, 3: RGB')
 cmd:text()
 opt = cmd:parse(arg or {})
 
