@@ -132,6 +132,7 @@ for i=1, #files do
     local tile_fm=torch.Tensor(#tiles,64,dd,dd)
     for ti=1,#tiles do
         local b=unet:forward(tiles[ti]:cuda()):double()
+        print(b:size())
         tile_output[ti]=b:select(1,4)  -- cell has label 2   
 
         local fm=unet.modules[66].output
