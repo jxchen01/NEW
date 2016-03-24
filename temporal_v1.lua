@@ -158,7 +158,7 @@ function train()
 		seq_idx=1;
 	end
 
-	local input_sequence, target_sequence, atmp
+	local input_sequence, atmp
 	if not opt.RAW then
 		a=torch.load(files[data_index[seq_idx]])
 		input_sequence = a.input
@@ -169,6 +169,7 @@ function train()
 		atmp = data[data_index[seq_idx]].target
 	end
 
+	local target_sequence={}
 	for k=1, #atmp do
 		table.insert(target_sequence, torch.reshape(atmp[k],(16*XX-92)*(16*XX-92),1))
 	end
