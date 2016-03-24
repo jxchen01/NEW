@@ -100,6 +100,7 @@ for i=1, #files do
     end
     image_whole = pad:forward(raw)
 
+    print(i)
     -- build tiles
     local tiles = {} 
     local dd=16*XX-92
