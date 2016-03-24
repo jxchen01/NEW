@@ -57,13 +57,10 @@ end
 unet=torch.load(opt.modelPath)
 unet:evaluate()
 
-
 -- 4. Process images one by one 
-
-
 for i=1, #files do
 	
-    local input_seq, label_seq
+    local image_seq, target_seq
     if opt.RAM then
         image_seq = data[i].image
         if opt.training then
@@ -94,6 +91,7 @@ for i=1, #files do
         end
         table.insert(fm_seq, fm:float())
         print(fm:size())
+        --[[
         if i==1 and j==1 then
             --local softmax = nn.SoftMax()
             --out = softmax:forward(b[1])
@@ -107,7 +105,9 @@ for i=1, #files do
                 image.save(str1,a:float())
             end
         end
+        --]]
     end
+
     if opt.training then
         obj={input=fm_seq, target=target_seq}
     else
@@ -116,7 +116,7 @@ for i=1, #files do
     local str= string.format('%s/train_%d.t7',opt.outputDir,i);
     torch.save(str,obj)
 
-     collectgarbage()
+    collectgarbage()
     -- write the segmentation result to file
     --local filename=string.format('%s/prob_%d.png',opt.segDir,i);
     --image.save(filename,output_image)
