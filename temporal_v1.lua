@@ -106,7 +106,7 @@ for i, temporalSize in ipairs(opt.HiddenSize) do
 end
 temporal_model:add(nn.SpatialConvolution(inputDepth, 4, 1, 1, 1, 1, 0, 0))
 temporal_model:add(nn.Transpose({1,2},{2,3}))
-temporal_model:add(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),2))
+temporal_model:add(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),4))
 temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 -- ship the model to gpu
