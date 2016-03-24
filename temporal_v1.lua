@@ -113,6 +113,7 @@ temporal_model:add(cudnn.SpatialConvolution(inputDepth, 4, 1, 1, 1, 1, 0, 0))
 temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 -- ship the model to gpu
+cudnn.convert(temporal_model,cudnn)
 temporal_model:cuda()
 
 -- define criterion and ship to gpu
