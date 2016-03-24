@@ -133,7 +133,9 @@ for i=1, #files do
     for ti=1,#tiles do
         local b=unet:forward(tiles[ti]:cuda()):double()
         print(b:size())
-        tile_output[ti]=b:select(1,4)  -- cell has label 2   
+        local cc=torch.Tensor(1,16*XX-92, 16*XX-92)
+        cc=b:select(2,4)
+        tile_output[ti]=cc:float()  -- cell has label 2   
 
         local fm=unet.modules[66].output
         tile_fm[ti]:copy(fm)
