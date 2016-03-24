@@ -172,7 +172,7 @@ function train()
 	local pindex = torch.randperm(#input_sequence-opt.rho+1):long()
 	print(pindex)
 	print(#pindex)
-    for offset_idx = 1, #pindex do
+    for offset_idx=1, #pindex do
     	local offset = pindex[offset_idx]-1
     	local inputs, targets={}, {}
 		for j=1,opt.rho do 
