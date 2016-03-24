@@ -172,7 +172,7 @@ function train()
 	end
 
 	for k=1, #atmp do
-		table.insert(target_sequence, torch.reshape(atmp[k],(16*XX-92)*(16*XX-92),1)
+		table.insert(target_sequence, torch.reshape(atmp[k],(16*XX-92)*(16*XX-92),1))
 	end
 
 	-- prepare a sequence of rho frames
