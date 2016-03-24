@@ -11,10 +11,9 @@ matio=require 'matio'
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
-cmd:option('--modelPath','/home/jchen16/NEW/code/checkpoint/unet_30000.000000.bin','path to the trained model')
+cmd:option('--modelPath','/home/jchen16/NEW/code/checkpoint/unet_420000.000000.bin','path to the trained model')
 cmd:option('--imageDir', '/home/jchen16/NEW/data/fungus/training_data', 'the directory to load')
 cmd:option('--outputDir', '/home/jchen16/NEW/data/fungus/encoder', 'the directory to save the input for RNN')
-cmd:option('--segDir','/home/jchen16/NEW/data/temporal/prob','the directoty to save unet seg results')
 cmd:option('--ext','.mat','only load a specific type of images')
 cmd:option('--training',false,'training mode or not')
 cmd:option('--RAM',false,'load to RAM or not')
@@ -91,12 +90,13 @@ for i=1, #files do
         end
         table.insert(fm_seq, fm:float())
         print(fm:size())
-        --[[
+        
         if i==1 and j==1 then
-            --local softmax = nn.SoftMax()
-            --out = softmax:forward(b[1])
-            --image.save('test1.png',out:select(1,3))
-            --image.save('test2.png',out:select(1,4))
+            local softmax = nn.SoftMax()
+            out = softmax:forward(b[1])
+            image.save('test1.png',out:select(1,3))
+            image.save('test2.png',out:select(1,4))
+            --[[
             for kk=1,fm:size(1) do
                 local a=fm:select(1,kk)
                 print(a[1][100])
@@ -104,8 +104,9 @@ for i=1, #files do
                 local str1= string.format('test_fm_%d.png',kk);
                 image.save(str1,a:float())
             end
+            --]]
         end
-        --]]
+        
     end
 
     if opt.training then
