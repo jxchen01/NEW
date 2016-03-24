@@ -5,6 +5,7 @@ require 'optim'
 require 'cutorch'
 require 'cunn'
 require 'cudnn'
+require 'dp'
 
 cmd = torch.CmdLine()
 cmd:text()
@@ -23,10 +24,12 @@ cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution
 cmd:option('--checkpoint',5000,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/code/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',400000,'the number of training iterations')
-cmd:option('--HiddenSize',{80,40},'size of hidden layers')
+cmd:option('--HiddenSize','{40,20}','size of hidden layers')
 cmd:option('--XX',20,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
+
+opt.hiddenSize = dp.returnString(opt.hiddenSize)
 
 XX=opt.XX
 
