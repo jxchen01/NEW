@@ -23,7 +23,7 @@ cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution
 cmd:option('--checkpoint',5000,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/code/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',400000,'the number of training iterations')
-cmd:option('--HiddenSize',{128,64},'size of hidden layers')
+cmd:option('--HiddenSize',{80,40},'size of hidden layers')
 cmd:option('--XX',20,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
@@ -170,9 +170,7 @@ function train()
 
 	-- prepare a sequence of rho frames
 	local pindex = torch.randperm(#input_sequence-opt.rho+1):long()
-	print(pindex)
-	print(#pindex)
-    for offset_idx=1, 14 do
+    for offset_idx=1, #pindex do
     	local offset = pindex[offset_idx]-1
     	local inputs, targets={}, {}
 		for j=1,opt.rho do 
