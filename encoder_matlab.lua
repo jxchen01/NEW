@@ -95,10 +95,15 @@ for i=1, #files do
         table.insert(fm_seq, fm:float())
         print(fm:size())
         if i==1 and j==1 then
-            local softmax = nn.SoftMax()
-            out = softmax:forward(b[1])
-            image.save('test1.png',out:select(1,3))
-            image.save('test2.png',out:select(1,4))
+            --local softmax = nn.SoftMax()
+            --out = softmax:forward(b[1])
+            --image.save('test1.png',out:select(1,3))
+            --image.save('test2.png',out:select(1,4))
+            for kk=1,fm:size(1) do
+                local a=fm:select(1,kk)
+                local str1= string.format('test_fm_%d.png',kk);
+                image.save(str1,a:float())
+            end
         end
     end
     if opt.training then
