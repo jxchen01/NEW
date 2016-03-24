@@ -121,7 +121,9 @@ for i=1, #files do
             else
                 y0=1+dd*(yi-1)
             end
-            table.insert(tiles, image_whole:sub(1,1,x0,x0+windowSize-1,y0,y0+windowSize-1))
+            local tmp=torch.Tensor(1,1,windowSize,windowSize)
+            tmp[1][1]=image_whole:sub(1,1,x0,x0+windowSize-1,y0,y0+windowSize-1)
+            table.insert(tiles, tmp)
         end
     end
 
