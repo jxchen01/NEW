@@ -4,7 +4,6 @@ require 'ConvLSTM'
 require 'optim'
 require 'cutorch'
 require 'cunn'
-require 'cudnn'
 require 'dp'
 
 cmd = torch.CmdLine()
@@ -108,22 +107,20 @@ for i, temporalSize in ipairs(opt.HiddenSize) do
 	temporal_model:add(seq)
 end
 temporal_model:add(cudnn.SpatialConvolution(inputDepth, 4, 1, 1, 1, 1, 0, 0))
---temporal_model:add(nn.Transpose({1,2},{2,3}))
---temporal_model:add(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),2))
+temporal_model:add(nn.Transpose({1,2},{2,3}))
+temporal_model:add(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),2))
 temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 -- ship the model to gpu
-cudnn.convert(temporal_model,cudnn)
 temporal_model:cuda()
 
 -- define criterion and ship to gpu
---criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion()):cuda()
 weights=torch.FloatTensor(4)
 weights[1]=0.15
 weights[2]=0.15
 weights[3]=0.4 
 weights[4]=0.3
-criterion = cudnn.SpatialCrossEntropyCriterion(weights):cuda()
+criterion = nn.SequencerCriterion(nn.CrossEntropyCriterion(weights)):cuda()
 
 -- parameters initialization
 params, gradParams = temporal_model:getParameters()
@@ -163,13 +160,19 @@ function train()
 		seq_idx=1;
 	end
 
+	local input_sequence, target_sequence, atmp
 	if not opt.RAW then
 		a=torch.load(files[data_index[seq_idx]])
 		input_sequence = a.input
-		target_sequence = a.target
+		atmp=a.target
+		
 	else
 		input_sequence = data[data_index[seq_idx]].input
-		target_sequence = data[data_index[seq_idx]].target
+		atmp = data[data_index[seq_idx]].target
+	end
+
+	for k=1, #atmp do
+		table.insert(target_sequence, torch.reshape(atmp[k],(16*XX-92)*(16*XX-92),1)
 	end
 
 	-- prepare a sequence of rho frames
@@ -213,7 +216,7 @@ function train()
 			return err, gradParams
 		end
 
-		local _, loss = optim.sgd(feval, params, optim_config)
+		local _, loss = optim.adam(feval, params, optim_config)
 		print('Iter '..epoch..', Loss = '..loss[1])
 
 		if opt.checkpoint>0 and epoch%opt.checkpoint==0 and epoch>10000 then
