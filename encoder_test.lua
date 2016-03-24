@@ -132,7 +132,6 @@ for i=1, #files do
     local tile_fm=torch.Tensor(#tiles,64,dd,dd)
     for ti=1,#tiles do
         local b=unet:forward(tiles[ti]:cuda()):double()
-        print(b:size())
         local cc=torch.Tensor(1,16*XX-92, 16*XX-92)
         cc=b:select(2,4)
         tile_output[ti]=cc:float()  -- cell has label 2   
@@ -168,7 +167,7 @@ for i=1, #files do
     end
     
     -- write the segmentation result to file
-    local filename=string.format('%s/prob_%d.png',opt.segDir,i);
+    local filename=string.format('%s/prob_%d.png',opt.outputDir,i);
     image.save(filename,output_image)
      
     -- prepare for the data for temporal RNN
