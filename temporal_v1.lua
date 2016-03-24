@@ -163,14 +163,11 @@ function train()
 		a=torch.load(files[data_index[seq_idx]])
 		input_sequence = a.input
 		target_sequence = a.target
-		print(a)
 	else
 		input_sequence = data[data_index[seq_idx]].input
 		target_sequence = data[data_index[seq_idx]].target
 	end
 
-    print(target_sequence:size())
-    print(input_sequence:size())
 	-- prepare a sequence of rho frames
 	local pindex = torch.randperm(#input_sequence-opt.rho+1):long()
 	print(pindex)
