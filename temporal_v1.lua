@@ -34,8 +34,6 @@ XX=opt.XX
 
 -- set GPU device
 cutorch.setDevice(opt.gpu)
-cudnn.benchmark = true
-cudnn.fastest = true
 
 -------------------------------------------------------------------------------
 ---  Part1: Data Loading 
