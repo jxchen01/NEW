@@ -29,7 +29,7 @@ cmd:option('--XX',20,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
 
-opt.hiddenSize = dp.returnString(opt.hiddenSize)
+opt.HiddenSize = dp.returnString(opt.HiddenSize)
 
 XX=opt.XX
 
