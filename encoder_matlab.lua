@@ -101,6 +101,8 @@ for i=1, #files do
             --image.save('test2.png',out:select(1,4))
             for kk=1,fm:size(1) do
                 local a=fm:select(1,kk)
+                print(a[1][100])
+                print(type(a))
                 local str1= string.format('test_fm_%d.png',kk);
                 image.save(str1,a:float())
             end
