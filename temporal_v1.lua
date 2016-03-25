@@ -112,6 +112,15 @@ temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 -- ship the model to gpu
 temporal_model:cuda()
 
+local finput, fgradInput
+temporal_model:apply(function(m)  if torch.type(m) == 'nn.SpatialConvolution' or torch.type(m) == 'nn.SpatialFullConvolution' then 
+                           finput = finput or m.finput
+                           fgradInput = fgradInput or m.fgradInput
+                           m.finput = finput
+                           m.fgradInput = fgradInput
+                        end
+            end)
+
 -- define criterion and ship to gpu
 weights=torch.FloatTensor(4)
 weights[1]=0.15
@@ -174,6 +183,9 @@ function train()
 		table.insert(target_sequence, torch.reshape(atmp[k],(16*XX-92)*(16*XX-92),1))
 	end
 
+	print(input_sequence)
+	print(target_sequence)
+	
 	-- prepare a sequence of rho frames
 	local pindex = torch.randperm(#input_sequence-opt.rho+1):long()
     for offset_idx=1, pindex:size(1) do
@@ -233,7 +245,7 @@ function train()
     seq_idx = seq_idx + 1
 end
 
-if epoch < opt.nIteration then
+while epoch < opt.nIteration do
    train()
 end
 
