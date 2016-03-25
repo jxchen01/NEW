@@ -12,17 +12,9 @@ cmd:text('Options:')
 cmd:option('--dataDir', '/home/jchen16/NEW/data/fungus/encoder', 'the directory to load')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
-cmd:option('--kernalSize',5,'the kernal size of convolution on input feature map')
-cmd:option('--kernalSizeMemory',5,'the kernal size of convolution on the cell state')
-cmd:option('--learningRate',0.02,'initial learning rate')
-cmd:option('--minLR',0.00001,'minimal learning rate')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'true means load all images to RAM')
-cmd:option('--clip',5,'max allowed gradient norm in BPTT')
-cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution between -uniform and uniform.')
-cmd:option('--checkpoint',5000,'the number of iteration to save checkpoints')
-cmd:option('--CheckPointDir','/home/jchen16/NEW/code/checkpoint','the directoty to save checkpoints')
-cmd:option('--nIteration',400000,'the number of training iterations')
+cmd:option('--OutputDir','/home/jchen16/NEW/code/test','the directoty to save checkpoints')
 cmd:option('--HiddenSize','{32,16}','size of hidden layers')
 cmd:option('--XX',20,'XX')
 cmd:text()
@@ -136,7 +128,7 @@ for i=1,2 do
 		local img = d:select(3,4)
 		image.save(filename, img)
 	end
-	
+
     -- clean 
     collectgarbage()
 end
