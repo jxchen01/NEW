@@ -10,7 +10,7 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
 cmd:option('--dataDir', '/home/jchen16/NEW/data/fungus/encoder', 'the directory to load')
-cmd:option('--modelPath', '/home/jchen16/NEW/code/checkpoints/v1_75000.bin', 'the directory to load')
+cmd:option('--modelPath', '/home/jchen16/NEW/code/checkpoint/v1_75000.bin', 'the directory to load')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
 cmd:option('--gpu',1,'gpu device to use')
@@ -101,10 +101,10 @@ for i=1,2 do
 	-- fetch one whole sequence 
 	local input_sequence
 	if not opt.RAW then
-		a=torch.load(files[data_index[seq_idx]])
+		a=torch.load(files[i])
 		input_sequence = a.input
 	else
-		input_sequence = data[data_index[seq_idx]].input
+		input_sequence = data[i].input
 	end
 
 		-- reset rnn memory
