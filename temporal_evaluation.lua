@@ -9,7 +9,7 @@ require 'dp'
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
-cmd:option('--dataDir', '/home/jchen16/NEW/data/fungus/encoder', 'the directory to load')
+cmd:option('--modelPath', '/home/jchen16/NEW/code/checkpoints/v1_75000.bin', 'the directory to load')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
 cmd:option('--gpu',1,'gpu device to use')
