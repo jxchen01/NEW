@@ -139,7 +139,8 @@ end
 
 -- initialize the LSTM forget gates with slightly higher biases to encourage remembering in the beginning
 for j=1, #opt.HiddenSize do
-	temporal_model.module.module.modules[j]:initBias(1,0)  -- (1,0) means remember; (0,0) means forget
+	temporal_model.module.module.modules[j+1]:initBias(1,0)  -- (1,0) means remember; (0,0) means forget
+															 -- index by the order of the module blocks
 end
 
 print('finish building the model')
