@@ -23,7 +23,7 @@ cmd:option('--randNorm', 0.05, 'initialize parameters using uniform distribution
 cmd:option('--checkpoint',5000,'the number of iteration to save checkpoints')
 cmd:option('--CheckPointDir','/home/jchen16/NEW/code/checkpoint','the directoty to save checkpoints')
 cmd:option('--nIteration',400000,'the number of training iterations')
-cmd:option('--HiddenSize','{40,20}','size of hidden layers')
+cmd:option('--HiddenSize','{128,64}','size of hidden layers')
 cmd:option('--XX',20,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
@@ -97,6 +97,8 @@ end
 -- build the model 
 inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {featre, w, h})
 local temporal_model = nn.Sequential()
+temporal_model:add(nn.SpatialConvolution(inputDepth, 16, 1, 1, 1, 1, 0, 0))
+inputDepth = 16
 for i, temporalSize in ipairs(opt.HiddenSize) do
 	local seq = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	seq:remember('both')
@@ -185,7 +187,7 @@ function train()
 
 	print(input_sequence)
 	print(target_sequence)
-	
+
 	-- prepare a sequence of rho frames
 	local pindex = torch.randperm(#input_sequence-opt.rho+1):long()
     for offset_idx=1, pindex:size(1) do
