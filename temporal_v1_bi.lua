@@ -202,8 +202,8 @@ function train()
 		end
 
 		-- reset rnn memory
-		for j=1, #opt.HiddenSize do
-	  		temporal_model.module.module.modules[j]:forget()
+		for ii=1,#opt.HiddenSize do
+			temporal_model.modules[ii+1]:forget()
 		end
 
 		-- build initial cell state 
@@ -211,10 +211,6 @@ function train()
 		--	init_cell_state = torch.Tensor(opt.HiddenSize[j],(16*XX-92),(16*XX-92)):copy(init_sequence[offset+1]:expand(opt.HiddenSize[j],(16*XX-92),(16*XX-92)))
 	 	--	temporal_model.module.module.modules[j].userPrevCell = init_cell_state:cuda()
 		-- end
-
-		for ii=1,#opt.HiddenSize do
-			temporal_model.modules[ii+1]:forget()
-		end
 
 		-- define the evaluation closure 
 		local feval = function (x)
