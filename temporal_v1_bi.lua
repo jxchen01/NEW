@@ -109,13 +109,13 @@ for i, temporalSize in ipairs(opt.HiddenSize) do
 	brnn:training()
 	temporal_model:add(brnn)
 
-	inputDepth = temporalSize
+	inputDepth = temporalSize*2
 end
---[[
+
 temporal_model:add(nn.Sequencer(nn.SpatialConvolution(inputDepth, 4, 1, 1, 1, 1, 0, 0)))
 temporal_model:add(nn.Sequencer(nn.Transpose({1,2},{2,3})))
 temporal_model:add(nn.Sequencer(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),4)))
---]]
+
 --temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 for i=1,#opt.HiddenSize do
