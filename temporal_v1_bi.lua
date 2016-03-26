@@ -99,6 +99,7 @@ inputDepth = data[1].input[1]:size(1) -- the number of features (dimension: {fea
 local temporal_model = nn.Sequential()
 temporal_model:add(nn.Sequencer(nn.SpatialConvolution(inputDepth, 16, 1, 1, 1, 1, 0, 0)))
 inputDepth = 16
+
 for i, temporalSize in ipairs(opt.HiddenSize) do
 	local fwd = nn.ConvLSTM(inputDepth,temporalSize, opt.rho, opt.kernalSize, opt.kernalSizeMemory, 1)
 	local bwd = fwd:clone()
@@ -110,10 +111,11 @@ for i, temporalSize in ipairs(opt.HiddenSize) do
 
 	inputDepth = temporalSize
 end
-
+--[[
 temporal_model:add(nn.Sequencer(nn.SpatialConvolution(inputDepth, 4, 1, 1, 1, 1, 0, 0)))
 temporal_model:add(nn.Sequencer(nn.Transpose({1,2},{2,3})))
 temporal_model:add(nn.Sequencer(nn.Reshape(data[1].input[1]:size(2)*data[1].input[1]:size(3),4)))
+--]]
 --temporal_model = nn.Sequencer(temporal_model)  -- decorate with Sequencer()
 
 for i=1,#opt.HiddenSize do
