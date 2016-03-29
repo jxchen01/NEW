@@ -17,7 +17,7 @@ cmd:option('--outputDir', '/home/jchen16/NEW/data/fungus/encoder_FM64_X12', 'the
 cmd:option('--ext','.mat','only load a specific type of images')
 cmd:option('--training',false,'training mode or not')
 cmd:option('--RAM',false,'load to RAM or not')
-cmd:option('--XX',12,'the key parameter to determine the size of image')
+cmd:option('--XX',20,'the key parameter to determine the size of image')
 cmd:option('--rho',3,'the length of sequence in RNN')
 cmd:option('--gpu',1,'the gpu to use')
 cmd:option('--outputLayer',2,'1 means the last one, 2 means the second last one')
@@ -80,7 +80,7 @@ for i=1, #files do
 
         local input_image = torch.FloatTensor(1,opt.imageType,16*XX+92,16*XX+92)
         input_image[1][1]=image_seq[j]
-
+	
         local b=unet:forward(input_image:cuda()):double()
         local fm
         if opt.outputLayer==1 then
