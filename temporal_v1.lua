@@ -198,7 +198,7 @@ function train()
 
 		-- reset rnn memory
 		for j=1, #opt.HiddenSize do
-	  		temporal_model.module.module.modules[j]:forget()
+	  		temporal_model.module.module.modules[j+1]:forget()
 		end
 
 		-- build initial cell state 
