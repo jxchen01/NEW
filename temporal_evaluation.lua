@@ -10,13 +10,13 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Options:')
 cmd:option('--dataDir', '/home/jchen16/NEW/data/fungus/encoder', 'the directory to load')
-cmd:option('--modelPath', '/home/jchen16/NEW/code/checkpoint/v1_75000.bin', 'the directory to load')
+cmd:option('--modelPath', '/home/jchen16/NEW/code/checkpoint/v1_bi_200000.bin', 'the directory to load')
 cmd:option('--ext','.t7','only load a specific type of files')
 cmd:option('--rho',3,'maximum length of the sequence for each training iteration')
 cmd:option('--gpu',1,'gpu device to use')
 cmd:option('--RAM',false,'true means load all images to RAM')
 cmd:option('--OutputDir','/home/jchen16/NEW/code/test','the directoty to save checkpoints')
-cmd:option('--HiddenSize','{32,16}','size of hidden layers')
+cmd:option('--HiddenSize','{8,8}','size of hidden layers')
 cmd:option('--XX',20,'XX')
 cmd:text()
 opt = cmd:parse(arg or {})
@@ -96,7 +96,7 @@ print('finish loading the model')
 softmax = nn.SoftMax()
 reshape_back = nn.Reshape((16*XX-92),(16*XX-92),4)
 
-for i=1,2 do
+for i=1,3 do
 --for i=1,#files do
 	-- fetch one whole sequence 
 	local input_sequence
@@ -107,10 +107,15 @@ for i=1,2 do
 		input_sequence = data[i].input
 	end
 
+	--[[
 		-- reset rnn memory
 	for j=1, #opt.HiddenSize do
 	  	temporal_model.module.module.modules[j]:forget()
 	end
+	--]]
+        for ii=1,#opt.HiddenSize do
+                temporal_model.modules[ii+1]:forget()
+        end
 
 	for j=1, #input_sequence do
 		input_sequence[j]=input_sequence[j]:cuda()
